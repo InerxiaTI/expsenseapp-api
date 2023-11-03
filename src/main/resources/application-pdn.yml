@@ -1,0 +1,28 @@
+# Datasource configuration in pdn environment
+server:
+  port: 8080
+spring:
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        default_schema: public
+        ddl-auto: none
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:postgresql://localhost:5432/expensemate-db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
+    hikari:
+      idle-timeout: 10000
+      pool-name: ApiPool
+      maximum-pool-size: 5
+
+logging:
+  level:
+    root: info
+    org.springframework: info
