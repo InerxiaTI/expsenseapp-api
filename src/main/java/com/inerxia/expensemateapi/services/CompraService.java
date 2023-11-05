@@ -50,4 +50,10 @@ public class CompraService {
         validateCompra(compra.getId());
         return repository.save(compra);
     }
+
+    public void delete(Integer idCompra){
+        CustomUtilService.ValidateRequired(idCompra);
+        validateCompra(idCompra);
+        repository.deleteById(idCompra);
+    }
 }

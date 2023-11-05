@@ -15,11 +15,14 @@ public enum MessageResponse {
 
     AMOUNT_NOT_ALLOWED("AMOUNT_NOT_ALLOWED", "Amount not allowed."),
     ADD_PURCHASE_NOT_ALLOWED("ADD_PURCHASE_NOT_ALLOWED", "Add purchase not allowed."),
+    EDIT_PURCHASE_NOT_ALLOWED("EDIT_PURCHASE_NOT_ALLOWED", "Edit purchase not allowed."),
+    DELETE_PURCHASE_NOT_ALLOWED("DELETE_PURCHASE_NOT_ALLOWED", "Delete purchase not allowed."),
 
 
     /*Success*/
     PURCHASE_CREATED("PURCHASE_CREATED", "Purchase created successfully"),
     PURCHASE_UPDATED("PURCHASE_UPDATED", "Purchase updated successfully"),
+    PURCHASE_DELETED("PURCHASE_DELETED", "Purchase deleted successfully"),
     ;
 
     private final String message;

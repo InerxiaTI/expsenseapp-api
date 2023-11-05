@@ -27,4 +27,10 @@ public class StandardResponse<T> {
         this.description = description;
         this.message = message;
     }
+
+    public StandardResponse(T body, String message, String description) {
+        this.description = description;
+        this.message = message;
+        this.body = body;
+    }
 }

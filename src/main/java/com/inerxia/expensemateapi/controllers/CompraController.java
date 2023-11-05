@@ -66,7 +66,7 @@ public class CompraController {
     })
     public ResponseEntity<StandardResponse<CompraDto>> crearCompra(@RequestBody CrearCompraRequest request) {
         var compra = facade.crearCompra(request);
-        return ResponseEntity.ok(new StandardResponse<>(compra, MessageResponse.PURCHASE_CREATED.getMessage()));
+        return ResponseEntity.ok(new StandardResponse<>(compra, MessageResponse.PURCHASE_CREATED.getMessage(), MessageResponse.PURCHASE_CREATED.getDescription()));
     }
 
     @PutMapping("/editar-compra")
@@ -78,6 +78,18 @@ public class CompraController {
     })
     public ResponseEntity<StandardResponse<CompraDto>> editarCompra(@RequestBody EditarCompraRequest request) {
         var compra = facade.editarCompra(request);
-        return ResponseEntity.ok(new StandardResponse<>(compra, MessageResponse.PURCHASE_UPDATED.getMessage()));
+        return ResponseEntity.ok(new StandardResponse<>(compra, MessageResponse.PURCHASE_UPDATED.getMessage(), MessageResponse.PURCHASE_UPDATED.getDescription()));
+    }
+
+    @DeleteMapping("/eliminar-compra/{idCompra}")
+    @Operation(summary = "Eliminar una compra")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data removed successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<Void>> eliminarCompra(@PathVariable Integer idCompra) {
+        facade.eliminarCompra(idCompra);
+        return ResponseEntity.ok(new StandardResponse<>(null, MessageResponse.PURCHASE_DELETED.getMessage(), MessageResponse.PURCHASE_DELETED.getDescription()));
     }
 }

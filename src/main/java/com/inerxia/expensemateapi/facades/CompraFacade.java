@@ -6,6 +6,7 @@ import com.inerxia.expensemateapi.dtos.requests.EditarCompraRequest;
 import com.inerxia.expensemateapi.dtos.requests.FiltroComprasRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaComprasResponse;
 import com.inerxia.expensemateapi.entities.Compra;
+import com.inerxia.expensemateapi.entities.ListaCompra;
 import com.inerxia.expensemateapi.exceptions.RequestErrorException;
 import com.inerxia.expensemateapi.mappers.CompraMapper;
 import com.inerxia.expensemateapi.services.CategoriaService;
@@ -79,11 +80,7 @@ public class CompraFacade {
 
         Compra compraSaved = compraService.save(buildCompraToCreate(request));
 
-        List<Compra> compras = compraService.consultarComprasByListaCompra(request.getIdListaCompras());
-        Double totalCompras = calcularTotalCompras(compras);
-
-        listaCompra.setTotalCompras(totalCompras);
-        listaCompraService.update(listaCompra);
+        calculateAndUpdateTotalCompras(request.getIdListaCompras(), listaCompra);
 
         return compraMapper.toDto(compraSaved);
     }
@@ -110,18 +107,37 @@ public class CompraFacade {
 
         var listaCompra = listaCompraService.findById(compra.getListaCompraId());
         if (!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())) {
-            throw new RequestErrorException(MessageResponse.ADD_PURCHASE_NOT_ALLOWED);
+            throw new RequestErrorException(MessageResponse.EDIT_PURCHASE_NOT_ALLOWED);
         }
 
         Compra compraUpdated = compraService.update(buildCompraToUpdate(request, compra));
 
-        List<Compra> compras = compraService.consultarComprasByListaCompra(compra.getListaCompraId());
+        calculateAndUpdateTotalCompras(compra.getListaCompraId(), listaCompra);
+
+        return compraMapper.toDto(compraUpdated);
+    }
+
+    public void eliminarCompra(Integer idCompra){
+        CustomUtilService.ValidateRequired(idCompra);
+
+        Compra compra = compraService.findById(idCompra);
+
+        var listaCompra = listaCompraService.findById(compra.getListaCompraId());
+        if (!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())) {
+            throw new RequestErrorException(MessageResponse.DELETE_PURCHASE_NOT_ALLOWED);
+        }
+
+        compraService.delete(idCompra);
+
+        calculateAndUpdateTotalCompras(compra.getListaCompraId(), listaCompra);
+    }
+
+    private void calculateAndUpdateTotalCompras(Integer idListaCompra, ListaCompra listaCompra) {
+        List<Compra> compras = compraService.consultarComprasByListaCompra(idListaCompra);
         Double totalCompras = calcularTotalCompras(compras);
 
         listaCompra.setTotalCompras(totalCompras);
         listaCompraService.update(listaCompra);
-
-        return compraMapper.toDto(compraUpdated);
     }
 
     public Compra buildCompraToCreate(CrearCompraRequest request){
