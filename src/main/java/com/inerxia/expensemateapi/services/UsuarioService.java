@@ -33,4 +33,9 @@ public class UsuarioService {
         return repository.findById(idUsuario).orElseThrow(() ->
                 new DataNotFoundException(MessageResponse.USER_NOT_FOUND_EXCEPTION));
     }
+
+    public Usuario findByCorreo(String email) {
+        return repository.findByCorreo(email).orElseThrow(() ->
+                new DataNotFoundException(MessageResponse.USER_NOT_FOUND_EXCEPTION));
+    }
 }

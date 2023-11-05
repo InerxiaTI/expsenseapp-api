@@ -72,7 +72,7 @@ public class CompraController {
     @PutMapping("/editar-compra")
     @Operation(summary = "Editar una compra")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Data inserted successfully"),
+            @ApiResponse(responseCode = "200", description = "Data updated successfully"),
             @ApiResponse(responseCode = "400", description = "The request is invalid"),
             @ApiResponse(responseCode = "500", description = "Internal error processing response"),
     })

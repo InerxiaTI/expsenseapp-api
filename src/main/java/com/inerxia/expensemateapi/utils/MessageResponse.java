@@ -17,6 +17,7 @@ public enum MessageResponse {
     ADD_PURCHASE_NOT_ALLOWED("ADD_PURCHASE_NOT_ALLOWED", "Add purchase not allowed."),
     EDIT_PURCHASE_NOT_ALLOWED("EDIT_PURCHASE_NOT_ALLOWED", "Edit purchase not allowed."),
     DELETE_PURCHASE_NOT_ALLOWED("DELETE_PURCHASE_NOT_ALLOWED", "Delete purchase not allowed."),
+    USER_NOT_ACTIVE("USER_NOT_ACTIVE", "The user is not active."),
 
 
     /*Success*/
