@@ -19,15 +19,19 @@ public class Usuario {
     @Column(name = "nombres", nullable = false, unique = true)
     private String nombres;
 
+    @NotNull
     @Column(name = "apellidos", nullable = false, unique = true)
     private String apellidos;
 
+    @NotNull
     @Column(name = "activo", nullable = false)
     private Boolean activo;
 
-    @Column(name = "correo")
+    @NotNull
+    @Column(name = "correo", nullable = false)
     private String correo;
 
+    @NotNull
     @Column(name = "contrasena", nullable = false)
     private String contrasena;
 }

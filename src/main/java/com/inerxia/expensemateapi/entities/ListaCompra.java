@@ -28,11 +28,9 @@ public class ListaCompra {
     @Column(name = "estado", nullable = false)
     private String estado;
 
-    @NotNull
-    @Column(name = "fecha_finalizado", nullable = false)
+    @Column(name = "fecha_finalizado")
     private LocalDateTime fechaFinalizado;
 
-    @NotNull
     @Column(name = "total_compras", nullable = false)
     private Double totalCompras;
 
@@ -44,7 +42,6 @@ public class ListaCompra {
     @JoinColumn(name = "usuario_creador_fk", insertable = false, updatable = false)
     private Usuario usuarioCreador;
 
-    @NotNull
-    @Column(name = "codigo_generado", nullable = false)
+    @Column(name = "codigo_generado")
     private String codigoGenerado;
 }

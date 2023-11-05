@@ -58,6 +58,7 @@ public class Compra {
     @Column(name = "valor")
     private Double valor;
 
-    @Column(name = "fecha_creacion")
+    @NotNull
+    @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 }

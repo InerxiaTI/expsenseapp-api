@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface CompraRepository extends JpaRepository<Compra, Integer> {
 
     @Query(value = "SELECT new com.inerxia.expensemateapi.dtos.responses.ConsultaComprasResponse(" +
@@ -26,4 +28,9 @@ public interface CompraRepository extends JpaRepository<Compra, Integer> {
             "ORDER BY c.fechaCompra DESC")
     Page<ConsultaComprasResponse> consultarComprasConFiltro(@Param("filtro") FiltroComprasRequest filtro,
                                                             Pageable pageable);
+
+    @Query(value = "SELECT c " +
+            "FROM Compra c " +
+            "WHERE (c.listaCompraId = :#{#idListaCompras}) ")
+    List<Compra> consultarComprasByListaCompra(Integer idListaCompras);
 }

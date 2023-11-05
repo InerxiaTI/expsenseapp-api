@@ -44,7 +44,8 @@ public class DetalleCierre {
     @Column(name = "total_deuda", nullable = false)
     private Double totalDeuda;
 
-    @Column(name = "aprobado")
+    @NotNull
+    @Column(name = "aprobado", nullable = false)
     private Boolean aprobado;
 
     @Column(name = "fecha_aprobacion", nullable = false)

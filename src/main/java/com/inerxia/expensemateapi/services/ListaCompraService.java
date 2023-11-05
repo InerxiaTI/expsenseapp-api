@@ -24,8 +24,19 @@ public class ListaCompraService {
         return listaCompra.isPresent();
     }
 
+    public void validateListaCompra(Integer idListaCompras) {
+        repository.findById(idListaCompras).orElseThrow(() ->
+                new DataNotFoundException(MessageResponse.LIST_NOT_FOUND_EXCEPTION));
+    }
+
     public ListaCompra findById(Integer idListaCompras) {
         return repository.findById(idListaCompras).orElseThrow(() ->
                 new DataNotFoundException(MessageResponse.LIST_NOT_FOUND_EXCEPTION));
+    }
+
+    public ListaCompra update(ListaCompra listaCompra){
+        CustomUtilService.ValidateRequired(listaCompra.getId());
+        validateListaCompra(listaCompra.getId());
+        return repository.save(listaCompra);
     }
 }

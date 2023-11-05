@@ -1,9 +1,7 @@
 package com.inerxia.expensemateapi.handlers;
 
 
-import com.inerxia.expensemateapi.exceptions.BusinessException;
-import com.inerxia.expensemateapi.exceptions.DataDuplicateException;
-import com.inerxia.expensemateapi.exceptions.DataNotFoundException;
+import com.inerxia.expensemateapi.exceptions.*;
 import com.inerxia.expensemateapi.utils.StandardResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +20,20 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ExceptionHandler({BusinessException.class})
     protected ResponseEntity<StandardResponse<String>> handleBusinessException(HttpServletRequest request, BusinessException ex) {
         HttpStatus status = HttpStatus.CONFLICT;
+        StandardResponse<String> response = new StandardResponse<>(ex.getMessage(), ex.getDescription());
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ExceptionHandler({RequiredException.class})
+    protected ResponseEntity<StandardResponse<String>> handleRequiredException(HttpServletRequest request, RequiredException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardResponse<String> response = new StandardResponse<>(ex.getMessage(), ex.getDescription());
+        return new ResponseEntity<>(response, status);
+    }
+
+    @ExceptionHandler({RequestErrorException.class})
+    protected ResponseEntity<StandardResponse<String>> handleRequestErrorException(HttpServletRequest request, RequestErrorException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardResponse<String> response = new StandardResponse<>(ex.getMessage(), ex.getDescription());
         return new ResponseEntity<>(response, status);
     }

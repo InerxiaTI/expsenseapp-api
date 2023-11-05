@@ -31,8 +31,7 @@ public class IntegranteListaCompra {
     @JoinColumn(name = "usuario_fk", insertable = false, updatable = false)
     private Usuario usuario;
 
-    @NotNull
-    @Column(name = "porcentaje", nullable = false)
+    @Column(name = "porcentaje")
     private Double porcentaje;
 
     @NotNull

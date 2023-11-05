@@ -4,9 +4,21 @@ import lombok.Getter;
 
 @Getter
 public enum MessageResponse {
-    MISSING_REQUIRED_FIELD("missing_required_field", "Required field is missing"),
-    USER_NOT_FOUND_EXCEPTION("user_not_found", "User could not be found"),
-    LIST_NOT_FOUND_EXCEPTION("list_not_found", "Purchase list could not be found"),
+    MISSING_REQUIRED_FIELD("MISSING_REQUIRED_FIELD", "Required field is missing"),
+
+    /*NOT_FOUND_EXCEPTION*/
+    USER_NOT_FOUND_EXCEPTION("USER_NOT_FOUND_EXCEPTION", "User could not be found"),
+    LIST_NOT_FOUND_EXCEPTION("LIST_NOT_FOUND_EXCEPTION", "Purchase list could not be found"),
+    CATEGORY_NOT_FOUND_EXCEPTION("CATEGORY_NOT_FOUND_EXCEPTION", "Category could not be found"),
+
+
+
+    AMOUNT_NOT_ALLOWED("AMOUNT_NOT_ALLOWED", "Amount not allowed."),
+    ADD_PURCHASE_NOT_ALLOWED("ADD_PURCHASE_NOT_ALLOWED", "Add purchase not allowed."),
+
+
+    /*Success*/
+    PURCHASE_CREATED("PURCHASE_CREATED", "Purchase created successfully"),
     ;
 
     private final String message;
