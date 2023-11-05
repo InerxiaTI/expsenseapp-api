@@ -2,6 +2,7 @@ package com.inerxia.expensemateapi.facades;
 
 import com.inerxia.expensemateapi.dtos.CompraDto;
 import com.inerxia.expensemateapi.dtos.requests.CrearCompraRequest;
+import com.inerxia.expensemateapi.dtos.requests.EditarCompraRequest;
 import com.inerxia.expensemateapi.dtos.requests.FiltroComprasRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaComprasResponse;
 import com.inerxia.expensemateapi.entities.Compra;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -75,7 +77,7 @@ public class CompraFacade {
             throw new RequestErrorException(MessageResponse.ADD_PURCHASE_NOT_ALLOWED );
         }
 
-        Compra compraSaved = compraService.crearCompra(buildCompra(request));
+        Compra compraSaved = compraService.save(buildCompraToCreate(request));
 
         List<Compra> compras = compraService.consultarComprasByListaCompra(request.getIdListaCompras());
         Double totalCompras = calcularTotalCompras(compras);
@@ -86,7 +88,43 @@ public class CompraFacade {
         return compraMapper.toDto(compraSaved);
     }
 
-    public Compra buildCompra(CrearCompraRequest request){
+    public CompraDto editarCompra(EditarCompraRequest request){
+        CustomUtilService.ValidateRequired(request);
+        CustomUtilService.ValidateRequired(request.getIdCompra());
+        CustomUtilService.ValidateRequired(request.getIdUsuarioRegistro());
+
+        Compra compra = compraService.findById(request.getIdCompra());
+        if (Objects.nonNull(request.getIdUsuarioCompra())) {
+            usuarioService.validateUsuario(request.getIdUsuarioCompra());
+        }
+        if (Objects.nonNull(request.getIdUsuarioRegistro())) {
+            usuarioService.validateUsuario(request.getIdUsuarioRegistro());
+        }
+        if (Objects.nonNull(request.getIdCategoria())) {
+            categoriaService.validateCategoria(request.getIdCategoria());
+        }
+
+        if (request.getValor() <= 0) {
+            throw new RequestErrorException(MessageResponse.AMOUNT_NOT_ALLOWED);
+        }
+
+        var listaCompra = listaCompraService.findById(compra.getListaCompraId());
+        if (!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())) {
+            throw new RequestErrorException(MessageResponse.ADD_PURCHASE_NOT_ALLOWED);
+        }
+
+        Compra compraUpdated = compraService.update(buildCompraToUpdate(request, compra));
+
+        List<Compra> compras = compraService.consultarComprasByListaCompra(compra.getListaCompraId());
+        Double totalCompras = calcularTotalCompras(compras);
+
+        listaCompra.setTotalCompras(totalCompras);
+        listaCompraService.update(listaCompra);
+
+        return compraMapper.toDto(compraUpdated);
+    }
+
+    public Compra buildCompraToCreate(CrearCompraRequest request){
         Compra compra = new Compra();
         compra.setListaCompraId(request.getIdListaCompras());
         compra.setCategoriaId(request.getIdCategoria());
@@ -96,6 +134,16 @@ public class CompraFacade {
         compra.setDescripcion(request.getDescripcion());
         compra.setValor(request.getValor());
         compra.setFechaCreacion(LocalDateTime.now());
+        return compra;
+    }
+
+    public Compra buildCompraToUpdate(EditarCompraRequest request, Compra compra){
+        compra.setCategoriaId(request.getIdCategoria());
+        compra.setUsuarioCompraId(request.getIdUsuarioCompra());
+        compra.setUsuarioRegistroId(request.getIdUsuarioRegistro());
+        compra.setFechaCompra(request.getFechaCompra().atStartOfDay());
+        compra.setDescripcion(request.getDescripcion());
+        compra.setValor(request.getValor());
         return compra;
     }
 

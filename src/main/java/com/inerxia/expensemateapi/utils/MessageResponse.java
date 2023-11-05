@@ -10,7 +10,7 @@ public enum MessageResponse {
     USER_NOT_FOUND_EXCEPTION("USER_NOT_FOUND_EXCEPTION", "User could not be found"),
     LIST_NOT_FOUND_EXCEPTION("LIST_NOT_FOUND_EXCEPTION", "Purchase list could not be found"),
     CATEGORY_NOT_FOUND_EXCEPTION("CATEGORY_NOT_FOUND_EXCEPTION", "Category could not be found"),
-
+    PURCHASE_NOT_FOUND_EXCEPTION("PURCHASE_NOT_FOUND_EXCEPTION", "Purchase could not be found"),
 
 
     AMOUNT_NOT_ALLOWED("AMOUNT_NOT_ALLOWED", "Amount not allowed."),
@@ -19,6 +19,7 @@ public enum MessageResponse {
 
     /*Success*/
     PURCHASE_CREATED("PURCHASE_CREATED", "Purchase created successfully"),
+    PURCHASE_UPDATED("PURCHASE_UPDATED", "Purchase updated successfully"),
     ;
 
     private final String message;

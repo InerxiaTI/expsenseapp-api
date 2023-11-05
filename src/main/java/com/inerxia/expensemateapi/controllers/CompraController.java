@@ -2,6 +2,7 @@ package com.inerxia.expensemateapi.controllers;
 
 import com.inerxia.expensemateapi.dtos.CompraDto;
 import com.inerxia.expensemateapi.dtos.requests.CrearCompraRequest;
+import com.inerxia.expensemateapi.dtos.requests.EditarCompraRequest;
 import com.inerxia.expensemateapi.dtos.requests.FiltroComprasRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaComprasResponse;
 import com.inerxia.expensemateapi.facades.CompraFacade;
@@ -21,10 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/compra")
@@ -69,5 +67,17 @@ public class CompraController {
     public ResponseEntity<StandardResponse<CompraDto>> crearCompra(@RequestBody CrearCompraRequest request) {
         var compra = facade.crearCompra(request);
         return ResponseEntity.ok(new StandardResponse<>(compra, MessageResponse.PURCHASE_CREATED.getMessage()));
+    }
+
+    @PutMapping("/editar-compra")
+    @Operation(summary = "Editar una compra")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data inserted successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<CompraDto>> editarCompra(@RequestBody EditarCompraRequest request) {
+        var compra = facade.editarCompra(request);
+        return ResponseEntity.ok(new StandardResponse<>(compra, MessageResponse.PURCHASE_UPDATED.getMessage()));
     }
 }
