@@ -1,10 +1,16 @@
 package com.inerxia.expensemateapi.services;
 
+import com.inerxia.expensemateapi.dtos.ListaCompraDto;
+import com.inerxia.expensemateapi.dtos.requests.FilterListasComprasRequest;
 import com.inerxia.expensemateapi.entities.ListaCompra;
 import com.inerxia.expensemateapi.exceptions.DataNotFoundException;
 import com.inerxia.expensemateapi.repositories.ListaCompraRepository;
 import com.inerxia.expensemateapi.utils.CustomUtilService;
 import com.inerxia.expensemateapi.utils.MessageResponse;
+import com.inerxia.expensemateapi.utils.enums.ESTADOS_COLABORADORES;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -38,5 +44,10 @@ public class ListaCompraService {
         CustomUtilService.ValidateRequired(listaCompra.getId());
         validateListaCompra(listaCompra.getId());
         return repository.save(listaCompra);
+    }
+
+    public Page<ListaCompraDto> consultarListaCompras(@Param("filtro") FilterListasComprasRequest filtro, Pageable pageable){
+        String estadoColaborador = ESTADOS_COLABORADORES.APROBADO.name();
+        return repository.consultarListaCompras(filtro, estadoColaborador, pageable);
     }
 }

@@ -1,6 +1,7 @@
 package com.inerxia.expensemateapi.services;
 
 import com.inerxia.expensemateapi.entities.Usuario;
+import com.inerxia.expensemateapi.exceptions.BusinessException;
 import com.inerxia.expensemateapi.exceptions.DataNotFoundException;
 import com.inerxia.expensemateapi.repositories.UsuarioRepository;
 import com.inerxia.expensemateapi.utils.CustomUtilService;
@@ -27,6 +28,14 @@ public class UsuarioService {
     public void validateUsuario(Integer idUsuario) {
         repository.findById(idUsuario).orElseThrow(() ->
                 new DataNotFoundException(MessageResponse.USER_NOT_FOUND_EXCEPTION));
+    }
+
+    public void validateUsuarioActivo(Integer idUsuario) {
+        var usuario = repository.findById(idUsuario).orElseThrow(() ->
+                new DataNotFoundException(MessageResponse.USER_NOT_FOUND_EXCEPTION));
+        if(!usuario.getActivo()){
+            throw new BusinessException(MessageResponse.USER_NOT_ACTIVE);
+        }
     }
 
     public Usuario findById(Integer idUsuario) {

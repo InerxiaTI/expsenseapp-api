@@ -30,4 +30,16 @@ public class ListaCompraDto {
 
     @NotNull
     private String codigoGenerado;
+
+    public ListaCompraDto(Integer id, String nombre, LocalDateTime fechaCreacion, String estado, LocalDateTime fechaFinalizado,
+                          Double totalCompras, Integer usuarioCreadorId, String codigoGenerado) {
+        this.id = id;
+        this.nombre = nombre;
+        this.fechaCreacion = fechaCreacion;
+        this.estado = estado;
+        this.fechaFinalizado = fechaFinalizado;
+        this.totalCompras = totalCompras;
+        this.usuarioCreadorId = usuarioCreadorId;
+        this.codigoGenerado = codigoGenerado;
+    }
 }
