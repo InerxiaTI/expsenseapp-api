@@ -1,5 +1,6 @@
 package com.inerxia.expensemateapi.services;
 
+import com.inerxia.expensemateapi.entities.IntegranteListaCompra;
 import com.inerxia.expensemateapi.repositories.IntegranteListaCompraRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,4 +15,7 @@ public class IntegranteListaCompraService {
         this.repository = repository;
     }
 
+    public IntegranteListaCompra save(IntegranteListaCompra integranteListaCompra){
+        return repository.save(integranteListaCompra);
+    }
 }

@@ -50,4 +50,11 @@ public class ListaCompraService {
         String estadoColaborador = ESTADOS_COLABORADORES.APROBADO.name();
         return repository.consultarListaCompras(filtro, estadoColaborador, pageable);
     }
+
+    public ListaCompra save(ListaCompra listaCompra, String randomCode){
+        ListaCompra listaCompraSaved = repository.save(listaCompra);
+
+        listaCompraSaved.setCodigoGenerado(listaCompraSaved.getId().toString().concat(randomCode));
+        return repository.save(listaCompraSaved);
+    }
 }

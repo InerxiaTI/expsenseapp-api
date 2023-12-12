@@ -22,6 +22,7 @@ public enum MessageResponse {
 
     /*Success*/
     PURCHASE_CREATED("PURCHASE_CREATED", "Purchase created successfully"),
+    PURCHASE_LIST_CREATED("PURCHASE_LIST_CREATED", "Purchase list created successfully"),
     PURCHASE_UPDATED("PURCHASE_UPDATED", "Purchase updated successfully"),
     PURCHASE_DELETED("PURCHASE_DELETED", "Purchase deleted successfully"),
     ;
