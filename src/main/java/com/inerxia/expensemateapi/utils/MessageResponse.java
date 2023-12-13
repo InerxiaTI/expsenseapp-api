@@ -18,12 +18,15 @@ public enum MessageResponse {
     ADD_COLLABORATOR_NOT_ALLOWED("ADD_COLLABORATOR_NOT_ALLOWED", "Add collaborator not allowed."),
     DUPLICATE_USER_ON_PURCHASE_LIST("DUPLICATE_USER_ON_PURCHASE_LIST", "Duplicate user on purchase list."),
     PARTNER_REQUEST_REJECTED("PARTNER_REQUEST_REJECTED", "Partner request rejected."),
+    REQUEST_HAS_NOT_BEEN_APPROVED("REQUEST_HAS_NOT_BEEN_APPROVED", "Request has not been approved."),
     ADD_PURCHASE_NOT_ALLOWED("ADD_PURCHASE_NOT_ALLOWED", "Add purchase not allowed."),
     EDIT_PURCHASE_NOT_ALLOWED("EDIT_PURCHASE_NOT_ALLOWED", "Edit purchase not allowed."),
     DELETE_PURCHASE_NOT_ALLOWED("DELETE_PURCHASE_NOT_ALLOWED", "Delete purchase not allowed."),
     USER_NOT_ACTIVE("USER_NOT_ACTIVE", "The user is not active."),
     NOT_ALLOWED_ENABLE("NOT_ALLOWED_ENABLE", "Approve/Reject is not allowed because it is not the creating user."),
     ENABLE_COLLABORATOR_NOT_ALLOWED("ENABLE_COLLABORATOR_NOT_ALLOWED", "Enable collaborator not allowed."),
+    CHANGE_PERCENTAGE_NOT_ALLOWED("CHANGE_PERCENTAGE_NOT_ALLOWED", "Change percentage not allowed."),
+    PERCENT_NOT_ALLOWED("PERCENT_NOT_ALLOWED", "Percent not allowed."),
     CHANGE_REQUEST_STATUS_TO_CREATOR_NOT_ALLOWED("CHANGE_REQUEST_STATUS_TO_CREATOR_NOT_ALLOWED", "Changing the status of the creator's request is not allowed."),
 
 

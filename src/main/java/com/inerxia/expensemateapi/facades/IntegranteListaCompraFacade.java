@@ -3,6 +3,7 @@ package com.inerxia.expensemateapi.facades;
 import com.inerxia.expensemateapi.dtos.IntegranteListaCompraDto;
 import com.inerxia.expensemateapi.dtos.requests.AgregarColaboradorRequest;
 import com.inerxia.expensemateapi.dtos.requests.AprobarRechazarColaboradorRequest;
+import com.inerxia.expensemateapi.dtos.requests.AsignarPorcentajeColaboradorRequest;
 import com.inerxia.expensemateapi.entities.IntegranteListaCompra;
 import com.inerxia.expensemateapi.entities.ListaCompra;
 import com.inerxia.expensemateapi.exceptions.BusinessException;
@@ -26,6 +27,8 @@ import java.util.Objects;
 @Transactional
 public class IntegranteListaCompraFacade {
     private final Logger log = LoggerFactory.getLogger(IntegranteListaCompraFacade.class);
+    private final Integer MINIMUM_PERCENTAGE = 0;
+    private final Integer MAXIMUM_PERCENTAGE = 100;
     private final IntegranteListaCompraMapper integranteListaCompraMapper;
     private final IntegranteListaCompraService integranteListaCompraService;
     private final ListaCompraService listaCompraService;
@@ -93,6 +96,38 @@ public class IntegranteListaCompraFacade {
         }else{
             integranteFound.setEstado(ESTADOS_COLABORADORES.RECHAZADO.name());
         }
+        integranteListaCompraService.update(integranteFound);
+        return integranteListaCompraMapper.toDto(integranteFound);
+    }
+
+    public IntegranteListaCompraDto asignarPorcentajeColaborador(AsignarPorcentajeColaboradorRequest request) {
+        CustomUtilService.ValidateRequired(request);
+        CustomUtilService.ValidateRequired(request.getIdUsuarioColaborador());
+        CustomUtilService.ValidateRequired(request.getIdListaCompras());
+        CustomUtilService.ValidateRequired(request.getPorcentaje());
+
+        usuarioService.validateUsuarioActivo(request.getIdUsuarioColaborador());
+
+        ListaCompra listaCompra = listaCompraService.findById(request.getIdListaCompras());
+        if (!Objects.equals(listaCompra.getEstado(), ESTADOS_LISTA_COMPRAS.CONFIGURANDO.name())) {
+            throw new RequestErrorException(MessageResponse.CHANGE_PERCENTAGE_NOT_ALLOWED);
+        }
+
+        if (request.getPorcentaje() < MINIMUM_PERCENTAGE || request.getPorcentaje() > MAXIMUM_PERCENTAGE) {
+            throw new BusinessException(MessageResponse.PERCENT_NOT_ALLOWED);
+        }
+
+        IntegranteListaCompra integranteFound = integranteListaCompraService.findByListaCompraIdAndUsuarioId(listaCompra.getId(), request.getIdUsuarioColaborador());
+
+        if (Objects.equals(integranteFound.getEstado(), ESTADOS_COLABORADORES.RECHAZADO.name())) {
+            throw new BusinessException(MessageResponse.PARTNER_REQUEST_REJECTED);
+        }
+
+        if (Objects.equals(integranteFound.getEstado(), ESTADOS_COLABORADORES.PENDIENTE.name())) {
+            throw new BusinessException(MessageResponse.REQUEST_HAS_NOT_BEEN_APPROVED);
+        }
+
+        integranteFound.setPorcentaje(request.getPorcentaje());
         integranteListaCompraService.update(integranteFound);
         return integranteListaCompraMapper.toDto(integranteFound);
     }
