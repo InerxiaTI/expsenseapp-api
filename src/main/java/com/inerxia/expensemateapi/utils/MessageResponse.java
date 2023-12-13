@@ -14,6 +14,9 @@ public enum MessageResponse {
 
 
     AMOUNT_NOT_ALLOWED("AMOUNT_NOT_ALLOWED", "Amount not allowed."),
+    ADD_COLLABORATOR_NOT_ALLOWED("ADD_COLLABORATOR_NOT_ALLOWED", "Add collaborator not allowed."),
+    DUPLICATE_USER_ON_PURCHASE_LIST("DUPLICATE_USER_ON_PURCHASE_LIST", "Duplicate user on purchase list."),
+    PARTNER_REQUEST_REJECTED("PARTNER_REQUEST_REJECTED", "Partner request rejected."),
     ADD_PURCHASE_NOT_ALLOWED("ADD_PURCHASE_NOT_ALLOWED", "Add purchase not allowed."),
     EDIT_PURCHASE_NOT_ALLOWED("EDIT_PURCHASE_NOT_ALLOWED", "Edit purchase not allowed."),
     DELETE_PURCHASE_NOT_ALLOWED("DELETE_PURCHASE_NOT_ALLOWED", "Delete purchase not allowed."),
@@ -25,6 +28,7 @@ public enum MessageResponse {
     PURCHASE_LIST_CREATED("PURCHASE_LIST_CREATED", "Purchase list created successfully"),
     PURCHASE_UPDATED("PURCHASE_UPDATED", "Purchase updated successfully"),
     PURCHASE_DELETED("PURCHASE_DELETED", "Purchase deleted successfully"),
+    COLLABORATOR_CREATED("COLLABORATOR_CREATED", "Collaborator created successfully"),
     ;
 
     private final String message;

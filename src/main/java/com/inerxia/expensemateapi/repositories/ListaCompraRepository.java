@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface ListaCompraRepository extends JpaRepository<ListaCompra, Integer> {
 
     @Query(value = "SELECT new com.inerxia.expensemateapi.dtos.ListaCompraDto(" +
@@ -22,4 +24,6 @@ public interface ListaCompraRepository extends JpaRepository<ListaCompra, Intege
     Page<ListaCompraDto> consultarListaCompras(@Param("filtro") FilterListasComprasRequest filtro,
                                                String estadoColaborador,
                                                Pageable pageable);
+
+    Optional<ListaCompra> findByCodigoGenerado(String codigoGenerado);
 }

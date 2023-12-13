@@ -40,6 +40,11 @@ public class ListaCompraService {
                 new DataNotFoundException(MessageResponse.LIST_NOT_FOUND_EXCEPTION));
     }
 
+    public ListaCompra findByCodigoGenerado(String codigoGenerado) {
+        return repository.findByCodigoGenerado(codigoGenerado).orElseThrow(() ->
+                new DataNotFoundException(MessageResponse.LIST_NOT_FOUND_EXCEPTION));
+    }
+
     public ListaCompra update(ListaCompra listaCompra){
         CustomUtilService.ValidateRequired(listaCompra.getId());
         validateListaCompra(listaCompra.getId());
