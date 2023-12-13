@@ -2,7 +2,9 @@ package com.inerxia.expensemateapi.services;
 
 import com.inerxia.expensemateapi.entities.IntegranteListaCompra;
 import com.inerxia.expensemateapi.exceptions.BusinessException;
+import com.inerxia.expensemateapi.exceptions.DataNotFoundException;
 import com.inerxia.expensemateapi.repositories.IntegranteListaCompraRepository;
+import com.inerxia.expensemateapi.utils.CustomUtilService;
 import com.inerxia.expensemateapi.utils.MessageResponse;
 import com.inerxia.expensemateapi.utils.enums.ESTADOS_COLABORADORES;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,17 @@ public class IntegranteListaCompraService {
         return repository.save(integranteListaCompra);
     }
 
+    public IntegranteListaCompra update(IntegranteListaCompra integranteListaCompra){
+        CustomUtilService.ValidateRequired(integranteListaCompra.getId());
+        validateIntegranteListaCompra(integranteListaCompra.getId());
+        return repository.save(integranteListaCompra);
+    }
+
+    public void validateIntegranteListaCompra(Integer idIntegrante) {
+        repository.findById(idIntegrante).orElseThrow(() ->
+                new DataNotFoundException(MessageResponse.COLLABORATOR_NOT_FOUND_EXCEPTION));
+    }
+
     public IntegranteListaCompra agregarColaborador(IntegranteListaCompra integranteListaCompra){
         List<IntegranteListaCompra> integrantes = findAllByListaCompraId(integranteListaCompra.getListaCompraId());
 
@@ -43,5 +56,10 @@ public class IntegranteListaCompraService {
 
     public List<IntegranteListaCompra> findAllByListaCompraId(Integer listaCompraId){
         return repository.findAllByListaCompraId(listaCompraId);
+    }
+
+    public IntegranteListaCompra findByListaCompraIdAndUsuarioId(Integer listaCompraId, Integer usuarioId){
+        return repository.findByListaCompraIdAndUsuarioId(listaCompraId, usuarioId).orElseThrow(() ->
+                new DataNotFoundException(MessageResponse.COLLABORATOR_NOT_FOUND_EXCEPTION));
     }
 }

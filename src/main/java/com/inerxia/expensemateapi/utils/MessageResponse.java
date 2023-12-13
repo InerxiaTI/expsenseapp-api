@@ -11,6 +11,7 @@ public enum MessageResponse {
     LIST_NOT_FOUND_EXCEPTION("LIST_NOT_FOUND_EXCEPTION", "Purchase list could not be found"),
     CATEGORY_NOT_FOUND_EXCEPTION("CATEGORY_NOT_FOUND_EXCEPTION", "Category could not be found"),
     PURCHASE_NOT_FOUND_EXCEPTION("PURCHASE_NOT_FOUND_EXCEPTION", "Purchase could not be found"),
+    COLLABORATOR_NOT_FOUND_EXCEPTION("COLLABORATOR_NOT_FOUND_EXCEPTION", "Collaborator could not be found"),
 
 
     AMOUNT_NOT_ALLOWED("AMOUNT_NOT_ALLOWED", "Amount not allowed."),
@@ -21,6 +22,9 @@ public enum MessageResponse {
     EDIT_PURCHASE_NOT_ALLOWED("EDIT_PURCHASE_NOT_ALLOWED", "Edit purchase not allowed."),
     DELETE_PURCHASE_NOT_ALLOWED("DELETE_PURCHASE_NOT_ALLOWED", "Delete purchase not allowed."),
     USER_NOT_ACTIVE("USER_NOT_ACTIVE", "The user is not active."),
+    NOT_ALLOWED_ENABLE("NOT_ALLOWED_ENABLE", "Approve/Reject is not allowed because it is not the creating user."),
+    ENABLE_COLLABORATOR_NOT_ALLOWED("ENABLE_COLLABORATOR_NOT_ALLOWED", "Enable collaborator not allowed."),
+    CHANGE_REQUEST_STATUS_TO_CREATOR_NOT_ALLOWED("CHANGE_REQUEST_STATUS_TO_CREATOR_NOT_ALLOWED", "Changing the status of the creator's request is not allowed."),
 
 
     /*Success*/
@@ -29,6 +33,7 @@ public enum MessageResponse {
     PURCHASE_UPDATED("PURCHASE_UPDATED", "Purchase updated successfully"),
     PURCHASE_DELETED("PURCHASE_DELETED", "Purchase deleted successfully"),
     COLLABORATOR_CREATED("COLLABORATOR_CREATED", "Collaborator created successfully"),
+    COLLABORATOR_UPDATED("COLLABORATOR_UPDATED", "Collaborator updated successfully"),
     ;
 
     private final String message;

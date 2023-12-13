@@ -2,7 +2,9 @@ package com.inerxia.expensemateapi.facades;
 
 import com.inerxia.expensemateapi.dtos.IntegranteListaCompraDto;
 import com.inerxia.expensemateapi.dtos.requests.AgregarColaboradorRequest;
+import com.inerxia.expensemateapi.dtos.requests.AprobarRechazarColaboradorRequest;
 import com.inerxia.expensemateapi.entities.IntegranteListaCompra;
+import com.inerxia.expensemateapi.entities.ListaCompra;
 import com.inerxia.expensemateapi.exceptions.BusinessException;
 import com.inerxia.expensemateapi.exceptions.RequestErrorException;
 import com.inerxia.expensemateapi.mappers.IntegranteListaCompraMapper;
@@ -60,5 +62,38 @@ public class IntegranteListaCompraFacade {
         integranteListaCompra.setEsCreador(false);
         IntegranteListaCompra integranteSaved = integranteListaCompraService.agregarColaborador(integranteListaCompra);
         return integranteListaCompraMapper.toDto(integranteSaved);
+    }
+
+    public IntegranteListaCompraDto aprobarRechazarColaborador(AprobarRechazarColaboradorRequest request) {
+        CustomUtilService.ValidateRequired(request);
+        CustomUtilService.ValidateRequired(request.getIdUsuarioCreador());
+        CustomUtilService.ValidateRequired(request.getIdUsuarioColaborador());
+        CustomUtilService.ValidateRequired(request.getIdListaCompras());
+
+        usuarioService.validateUsuarioActivo(request.getIdUsuarioCreador());
+        usuarioService.validateUsuarioActivo(request.getIdUsuarioColaborador());
+
+        ListaCompra listaCompra = listaCompraService.findById(request.getIdListaCompras());
+        if (!Objects.equals(listaCompra.getUsuarioCreadorId(), request.getIdUsuarioCreador())) {
+            throw new BusinessException(MessageResponse.NOT_ALLOWED_ENABLE);
+        }
+
+        if (!Objects.equals(listaCompra.getEstado(), ESTADOS_LISTA_COMPRAS.CONFIGURANDO.name())) {
+            throw new RequestErrorException(MessageResponse.ENABLE_COLLABORATOR_NOT_ALLOWED);
+        }
+
+        if (Objects.equals(listaCompra.getUsuarioCreadorId(), request.getIdUsuarioColaborador())) {
+            throw new BusinessException(MessageResponse.CHANGE_REQUEST_STATUS_TO_CREATOR_NOT_ALLOWED);
+        }
+
+        IntegranteListaCompra integranteFound = integranteListaCompraService.findByListaCompraIdAndUsuarioId(listaCompra.getId(), request.getIdUsuarioColaborador());
+
+        if(request.getAprobar()){
+            integranteFound.setEstado(ESTADOS_COLABORADORES.APROBADO.name());
+        }else{
+            integranteFound.setEstado(ESTADOS_COLABORADORES.RECHAZADO.name());
+        }
+        integranteListaCompraService.update(integranteFound);
+        return integranteListaCompraMapper.toDto(integranteFound);
     }
 }
