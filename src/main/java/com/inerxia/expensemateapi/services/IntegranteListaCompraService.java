@@ -1,5 +1,7 @@
 package com.inerxia.expensemateapi.services;
 
+import com.inerxia.expensemateapi.dtos.requests.FilterConsultaIntegrantesRequest;
+import com.inerxia.expensemateapi.dtos.responses.ConsultaIntegrantesResponse;
 import com.inerxia.expensemateapi.entities.IntegranteListaCompra;
 import com.inerxia.expensemateapi.exceptions.BusinessException;
 import com.inerxia.expensemateapi.exceptions.DataNotFoundException;
@@ -61,5 +63,9 @@ public class IntegranteListaCompraService {
     public IntegranteListaCompra findByListaCompraIdAndUsuarioId(Integer listaCompraId, Integer usuarioId){
         return repository.findByListaCompraIdAndUsuarioId(listaCompraId, usuarioId).orElseThrow(() ->
                 new DataNotFoundException(MessageResponse.COLLABORATOR_NOT_FOUND_EXCEPTION));
+    }
+
+    public List<ConsultaIntegrantesResponse> consultarIntegrantesWithTotalCompras(FilterConsultaIntegrantesRequest filtro){
+        return repository.consultarIntegrantesWithTotalCompras(filtro);
     }
 }

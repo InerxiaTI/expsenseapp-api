@@ -4,6 +4,8 @@ import com.inerxia.expensemateapi.dtos.IntegranteListaCompraDto;
 import com.inerxia.expensemateapi.dtos.requests.AgregarColaboradorRequest;
 import com.inerxia.expensemateapi.dtos.requests.AprobarRechazarColaboradorRequest;
 import com.inerxia.expensemateapi.dtos.requests.AsignarPorcentajeColaboradorRequest;
+import com.inerxia.expensemateapi.dtos.requests.FilterConsultaIntegrantesRequest;
+import com.inerxia.expensemateapi.dtos.responses.ConsultaIntegrantesResponse;
 import com.inerxia.expensemateapi.entities.IntegranteListaCompra;
 import com.inerxia.expensemateapi.entities.ListaCompra;
 import com.inerxia.expensemateapi.exceptions.BusinessException;
@@ -21,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -91,9 +94,9 @@ public class IntegranteListaCompraFacade {
 
         IntegranteListaCompra integranteFound = integranteListaCompraService.findByListaCompraIdAndUsuarioId(listaCompra.getId(), request.getIdUsuarioColaborador());
 
-        if(request.getAprobar()){
+        if (request.getAprobar()) {
             integranteFound.setEstado(ESTADOS_COLABORADORES.APROBADO.name());
-        }else{
+        } else {
             integranteFound.setEstado(ESTADOS_COLABORADORES.RECHAZADO.name());
         }
         integranteListaCompraService.update(integranteFound);
@@ -131,4 +134,14 @@ public class IntegranteListaCompraFacade {
         integranteListaCompraService.update(integranteFound);
         return integranteListaCompraMapper.toDto(integranteFound);
     }
+
+    public List<ConsultaIntegrantesResponse> consultarIntegrantesWithTotalCompras(FilterConsultaIntegrantesRequest filter) {
+        CustomUtilService.ValidateRequired(filter);
+        CustomUtilService.ValidateRequired(filter.getIdListaCompras());
+
+        listaCompraService.validateListaCompra(filter.getIdListaCompras());
+
+        return integranteListaCompraService.consultarIntegrantesWithTotalCompras(filter);
+    }
+
 }
