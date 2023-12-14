@@ -28,11 +28,14 @@ public enum MessageResponse {
     CHANGE_PERCENTAGE_NOT_ALLOWED("CHANGE_PERCENTAGE_NOT_ALLOWED", "Change percentage not allowed."),
     PERCENT_NOT_ALLOWED("PERCENT_NOT_ALLOWED", "Percent not allowed."),
     CHANGE_REQUEST_STATUS_TO_CREATOR_NOT_ALLOWED("CHANGE_REQUEST_STATUS_TO_CREATOR_NOT_ALLOWED", "Changing the status of the creator's request is not allowed."),
+    HAS_PENDING_REQUESTS("HAS_PENDING_REQUESTS", "It is not allowed to start the list with pending requests."),
+    TOTAL_PERCENTAGES_MUST_BE_100_PERCENT("TOTAL_PERCENTAGES_MUST_BE_100_PERCENT", "Total percentages must be 100 percent."),
 
 
     /*Success*/
     PURCHASE_CREATED("PURCHASE_CREATED", "Purchase created successfully"),
     PURCHASE_LIST_CREATED("PURCHASE_LIST_CREATED", "Purchase list created successfully"),
+    PURCHASE_LIST_UPDATED("PURCHASE_LIST_UPDATED", "Purchase list updated successfully"),
     PURCHASE_UPDATED("PURCHASE_UPDATED", "Purchase updated successfully"),
     PURCHASE_DELETED("PURCHASE_DELETED", "Purchase deleted successfully"),
     COLLABORATOR_CREATED("COLLABORATOR_CREATED", "Collaborator created successfully"),

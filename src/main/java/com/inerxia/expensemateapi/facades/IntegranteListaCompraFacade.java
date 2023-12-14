@@ -66,6 +66,7 @@ public class IntegranteListaCompraFacade {
         integranteListaCompra.setUsuarioId(request.getIdUsuarioColaborador());
         integranteListaCompra.setEstado(ESTADOS_COLABORADORES.PENDIENTE.name());
         integranteListaCompra.setEsCreador(false);
+        integranteListaCompra.setPorcentaje(0.0);
         IntegranteListaCompra integranteSaved = integranteListaCompraService.agregarColaborador(integranteListaCompra);
         return integranteListaCompraMapper.toDto(integranteSaved);
     }
@@ -143,5 +144,4 @@ public class IntegranteListaCompraFacade {
 
         return integranteListaCompraService.consultarIntegrantesWithTotalCompras(filter);
     }
-
 }

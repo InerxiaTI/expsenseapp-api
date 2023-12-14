@@ -68,4 +68,15 @@ public class IntegranteListaCompraService {
     public List<ConsultaIntegrantesResponse> consultarIntegrantesWithTotalCompras(FilterConsultaIntegrantesRequest filtro){
         return repository.consultarIntegrantesWithTotalCompras(filtro);
     }
+
+    public List<IntegranteListaCompra> consultarIntegrantesFilter(FilterConsultaIntegrantesRequest filtro){
+        return repository.consultarIntegrantesFilter(filtro);
+    }
+
+    public Double sumarPorcentajesIntegrantes(List<IntegranteListaCompra> integrantes){
+        return integrantes.stream()
+                .mapToDouble(integrante -> Optional.ofNullable(integrante.getPorcentaje())
+                .orElse(0.0))
+                .sum();
+    }
 }

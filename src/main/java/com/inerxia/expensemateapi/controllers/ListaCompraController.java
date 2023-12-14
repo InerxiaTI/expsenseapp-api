@@ -20,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/lista-compra")
@@ -68,5 +65,17 @@ public class ListaCompraController {
     public ResponseEntity<StandardResponse<ListaCompraDto>> crearListaCompra(@RequestBody CrearListaCompraRequest request) {
         var listaCompra = facade.crearListaCompra(request);
         return ResponseEntity.ok(new StandardResponse<>(listaCompra, MessageResponse.PURCHASE_LIST_CREATED.getMessage(), MessageResponse.PURCHASE_LIST_CREATED.getDescription()));
+    }
+
+    @PutMapping("/inicializar-lista-compras/{idListaCompras}")
+    @Operation(summary = "Inicializa la lista de compras")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data inserted successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<ListaCompraDto>> inicializarListaCompras(@PathVariable Integer idListaCompras) {
+        var result = facade.inicializarListaCompras(idListaCompras);
+        return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.PURCHASE_LIST_UPDATED.getMessage(), MessageResponse.PURCHASE_LIST_UPDATED.getDescription()));
     }
 }

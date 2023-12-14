@@ -2,15 +2,18 @@ package com.inerxia.expensemateapi.facades;
 
 import com.inerxia.expensemateapi.dtos.ListaCompraDto;
 import com.inerxia.expensemateapi.dtos.requests.CrearListaCompraRequest;
+import com.inerxia.expensemateapi.dtos.requests.FilterConsultaIntegrantesRequest;
 import com.inerxia.expensemateapi.dtos.requests.FilterListasComprasRequest;
 import com.inerxia.expensemateapi.entities.IntegranteListaCompra;
 import com.inerxia.expensemateapi.entities.ListaCompra;
+import com.inerxia.expensemateapi.exceptions.BusinessException;
 import com.inerxia.expensemateapi.mappers.ListaCompraMapper;
 import com.inerxia.expensemateapi.services.IntegranteListaCompraService;
 import com.inerxia.expensemateapi.services.ListaCompraService;
 import com.inerxia.expensemateapi.services.UsuarioService;
 import com.inerxia.expensemateapi.utils.CustomUtilService;
 import com.inerxia.expensemateapi.utils.GenerateRandomCodeService;
+import com.inerxia.expensemateapi.utils.MessageResponse;
 import com.inerxia.expensemateapi.utils.enums.ESTADOS_COLABORADORES;
 import com.inerxia.expensemateapi.utils.enums.ESTADOS_LISTA_COMPRAS;
 import org.slf4j.Logger;
@@ -21,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -75,5 +80,42 @@ public class ListaCompraFacade {
         integranteListaCompraService.save(integranteListaCompra);
 
         return listaCompraMapper.toDto(listaCompraSaved);
+    }
+
+    public ListaCompraDto inicializarListaCompras(Integer idListaCompras) {
+        CustomUtilService.ValidateRequired(idListaCompras);
+
+        ListaCompra listaCompra = listaCompraService.findById(idListaCompras);
+
+        var estados = List.of(ESTADOS_COLABORADORES.PENDIENTE);
+        List<IntegranteListaCompra> integrantesPendientes = getIntegrantesPorEstado(idListaCompras, estados);
+
+        if (!integrantesPendientes.isEmpty()) {
+            throw new BusinessException(MessageResponse.HAS_PENDING_REQUESTS);
+        }
+
+        estados = List.of(ESTADOS_COLABORADORES.APROBADO);
+        List<IntegranteListaCompra> integrantesAprobados = getIntegrantesPorEstado(idListaCompras, estados);
+
+        Double totalPorcentajes = integranteListaCompraService.sumarPorcentajesIntegrantes(integrantesAprobados);
+
+        if (totalPorcentajes != 100) {
+            throw new BusinessException(MessageResponse.TOTAL_PERCENTAGES_MUST_BE_100_PERCENT);
+        }
+
+        listaCompra.setEstado(ESTADOS_LISTA_COMPRAS.PENDIENTE.name());
+        ListaCompra listaCompraUpdated = listaCompraService.update(listaCompra);
+        return listaCompraMapper.toDto(listaCompraUpdated);
+    }
+
+    private List<IntegranteListaCompra> getIntegrantesPorEstado(Integer idListaCompras, List<ESTADOS_COLABORADORES> estados){
+        var filter = new FilterConsultaIntegrantesRequest();
+        filter.setIdListaCompras(idListaCompras);
+        if(!estados.isEmpty()){
+            filter.setEstados(estados.stream()
+                    .map(Enum::name)
+                    .collect(Collectors.toList()));
+        }
+        return integranteListaCompraService.consultarIntegrantesFilter(filter);
     }
 }
