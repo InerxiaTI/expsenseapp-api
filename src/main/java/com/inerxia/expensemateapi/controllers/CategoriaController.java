@@ -95,4 +95,16 @@ public class CategoriaController {
         var result = facade.editarCategoria(request);
         return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.CATEGORY_UPDATED.getMessage(), MessageResponse.CATEGORY_UPDATED.getDescription()));
     }
+
+    @DeleteMapping("/eliminar-categoria/{idCategoria}")
+    @Operation(summary = "Eliminar una categoria")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data removed successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<Void>> eliminarCategoria(@PathVariable Integer idCategoria) {
+        facade.eliminarCategoria(idCategoria);
+        return ResponseEntity.ok(new StandardResponse<>(null, MessageResponse.CATEGORY_DELETED.getMessage(), MessageResponse.CATEGORY_DELETED.getDescription()));
+    }
 }

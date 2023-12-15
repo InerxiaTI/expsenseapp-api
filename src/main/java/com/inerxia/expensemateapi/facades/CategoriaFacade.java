@@ -6,10 +6,14 @@ import com.inerxia.expensemateapi.dtos.requests.EditarCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.requests.FiltroCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaCategoriaResponse;
 import com.inerxia.expensemateapi.entities.Categoria;
+import com.inerxia.expensemateapi.entities.Compra;
+import com.inerxia.expensemateapi.exceptions.RequestErrorException;
 import com.inerxia.expensemateapi.mappers.CategoriaMapper;
 import com.inerxia.expensemateapi.services.CategoriaService;
+import com.inerxia.expensemateapi.services.CompraService;
 import com.inerxia.expensemateapi.services.UsuarioService;
 import com.inerxia.expensemateapi.utils.CustomUtilService;
+import com.inerxia.expensemateapi.utils.MessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -28,11 +32,13 @@ public class CategoriaFacade {
     private final CategoriaMapper categoriaMapper;
     private final CategoriaService categoriaService;
     private final UsuarioService usuarioService;
+    private final CompraService compraService;
 
-    public CategoriaFacade(CategoriaMapper categoriaMapper, CategoriaService categoriaService, UsuarioService usuarioService) {
+    public CategoriaFacade(CategoriaMapper categoriaMapper, CategoriaService categoriaService, UsuarioService usuarioService, CompraService compraService) {
         this.categoriaMapper = categoriaMapper;
         this.categoriaService = categoriaService;
         this.usuarioService = usuarioService;
+        this.compraService = compraService;
     }
 
     public Page<ConsultaCategoriaResponse> consultarCategoriasConFiltro(@Param("filtro") FiltroCategoriaRequest filtro, Pageable pageable){
@@ -83,5 +89,17 @@ public class CategoriaFacade {
 
         Categoria categoriaSaved = categoriaService.update(categoria);
         return categoriaMapper.toDto(categoriaSaved);
+    }
+
+    public void eliminarCategoria(Integer idCategoria){
+        CustomUtilService.ValidateRequired(idCategoria);
+
+        Categoria categoria = categoriaService.findById(idCategoria);
+
+        List<Compra> compras = compraService.consultarComprasByCategoria(categoria.getId());
+        if(!compras.isEmpty()){
+            throw new RequestErrorException(MessageResponse.CATEGORY_HAS_ASSOCIATED_PURCHASES);
+        }
+        categoriaService.delete(categoria.getId());
     }
 }

@@ -55,4 +55,10 @@ public class CategoriaService {
         categoria.setLastUpdate(LocalDateTime.now());
         return repository.save(categoria);
     }
+
+    public void delete(Integer idCategoria){
+        CustomUtilService.ValidateRequired(idCategoria);
+        validateCategoria(idCategoria);
+        repository.deleteById(idCategoria);
+    }
 }

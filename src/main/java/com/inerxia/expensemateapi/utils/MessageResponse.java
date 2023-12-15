@@ -30,6 +30,7 @@ public enum MessageResponse {
     CHANGE_REQUEST_STATUS_TO_CREATOR_NOT_ALLOWED("CHANGE_REQUEST_STATUS_TO_CREATOR_NOT_ALLOWED", "Changing the status of the creator's request is not allowed."),
     HAS_PENDING_REQUESTS("HAS_PENDING_REQUESTS", "It is not allowed to start the list with pending requests."),
     TOTAL_PERCENTAGES_MUST_BE_100_PERCENT("TOTAL_PERCENTAGES_MUST_BE_100_PERCENT", "Total percentages must be 100 percent."),
+    CATEGORY_HAS_ASSOCIATED_PURCHASES("CATEGORY_HAS_ASSOCIATED_PURCHASES", "Category has associated purchases."),
 
 
     /*Success*/
@@ -40,6 +41,7 @@ public enum MessageResponse {
     PURCHASE_UPDATED("PURCHASE_UPDATED", "Purchase updated successfully"),
     CATEGORY_UPDATED("CATEGORY_UPDATED", "Category updated successfully"),
     PURCHASE_DELETED("PURCHASE_DELETED", "Purchase deleted successfully"),
+    CATEGORY_DELETED("CATEGORY_DELETED", "Category deleted successfully"),
     COLLABORATOR_CREATED("COLLABORATOR_CREATED", "Collaborator created successfully"),
     COLLABORATOR_UPDATED("COLLABORATOR_UPDATED", "Collaborator updated successfully"),
     ;

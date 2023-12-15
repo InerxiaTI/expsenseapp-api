@@ -33,4 +33,9 @@ public interface CompraRepository extends JpaRepository<Compra, Integer> {
             "FROM Compra c " +
             "WHERE (c.listaCompraId = :#{#idListaCompras}) ")
     List<Compra> consultarComprasByListaCompra(Integer idListaCompras);
+
+    @Query(value = "SELECT c " +
+            "FROM Compra c " +
+            "WHERE (c.categoriaId = :#{#idCategoria}) ")
+    List<Compra> consultarComprasByCategoria(Integer idCategoria);
 }

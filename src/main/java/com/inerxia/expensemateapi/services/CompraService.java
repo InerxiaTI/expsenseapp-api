@@ -38,6 +38,10 @@ public class CompraService {
         return repository.consultarComprasByListaCompra(idListaCompra);
     }
 
+    public List<Compra> consultarComprasByCategoria(Integer idCategoria){
+        return repository.consultarComprasByCategoria(idCategoria);
+    }
+
     public Compra findById(Integer idCompra) {
         return repository.findById(idCompra).orElseThrow(() ->
                 new DataNotFoundException(MessageResponse.PURCHASE_NOT_FOUND_EXCEPTION));
