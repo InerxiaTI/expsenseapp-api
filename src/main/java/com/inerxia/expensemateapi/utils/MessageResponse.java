@@ -38,6 +38,7 @@ public enum MessageResponse {
     PURCHASE_LIST_CREATED("PURCHASE_LIST_CREATED", "Purchase list created successfully"),
     PURCHASE_LIST_UPDATED("PURCHASE_LIST_UPDATED", "Purchase list updated successfully"),
     PURCHASE_UPDATED("PURCHASE_UPDATED", "Purchase updated successfully"),
+    CATEGORY_UPDATED("CATEGORY_UPDATED", "Category updated successfully"),
     PURCHASE_DELETED("PURCHASE_DELETED", "Purchase deleted successfully"),
     COLLABORATOR_CREATED("COLLABORATOR_CREATED", "Collaborator created successfully"),
     COLLABORATOR_UPDATED("COLLABORATOR_UPDATED", "Collaborator updated successfully"),

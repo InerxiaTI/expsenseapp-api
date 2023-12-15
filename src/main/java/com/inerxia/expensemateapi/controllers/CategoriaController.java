@@ -2,6 +2,7 @@ package com.inerxia.expensemateapi.controllers;
 
 import com.inerxia.expensemateapi.dtos.CategoriaDto;
 import com.inerxia.expensemateapi.dtos.requests.CrearCategoriaRequest;
+import com.inerxia.expensemateapi.dtos.requests.EditarCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.requests.FiltroCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaCategoriaResponse;
 import com.inerxia.expensemateapi.facades.CategoriaFacade;
@@ -81,5 +82,17 @@ public class CategoriaController {
     public ResponseEntity<StandardResponse<CategoriaDto>> crearCategoria(@RequestBody CrearCategoriaRequest request) {
         var result = facade.crearCategoria(request);
         return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.CATEGORY_CREATED.getMessage(), MessageResponse.CATEGORY_CREATED.getDescription()));
+    }
+
+    @PutMapping("/editar-categoria")
+    @Operation(summary = "Editar una categoria")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data updated successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<CategoriaDto>> editarCategoria(@RequestBody EditarCategoriaRequest request) {
+        var result = facade.editarCategoria(request);
+        return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.CATEGORY_UPDATED.getMessage(), MessageResponse.CATEGORY_UPDATED.getDescription()));
     }
 }

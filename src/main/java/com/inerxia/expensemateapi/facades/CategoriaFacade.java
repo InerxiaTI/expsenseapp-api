@@ -2,6 +2,7 @@ package com.inerxia.expensemateapi.facades;
 
 import com.inerxia.expensemateapi.dtos.CategoriaDto;
 import com.inerxia.expensemateapi.dtos.requests.CrearCategoriaRequest;
+import com.inerxia.expensemateapi.dtos.requests.EditarCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.requests.FiltroCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaCategoriaResponse;
 import com.inerxia.expensemateapi.entities.Categoria;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Transactional
@@ -63,6 +65,23 @@ public class CategoriaFacade {
         categoria.setEsPrivada(request.getEsPrivada());
         categoria.setUsuarioCreadorId(request.getIdUsuarioCreador());
         Categoria categoriaSaved = categoriaService.save(categoria);
+        return categoriaMapper.toDto(categoriaSaved);
+    }
+
+    public CategoriaDto editarCategoria(EditarCategoriaRequest request){
+        CustomUtilService.ValidateRequired(request);
+        CustomUtilService.ValidateRequired(request.getIdCategoria());
+
+        Categoria categoria = categoriaService.findById(request.getIdCategoria());
+
+        if (Objects.nonNull(request.getNombre())) {
+            categoria.setNombre(request.getNombre());
+        }
+        if (Objects.nonNull(request.getEsPrivada())) {
+            categoria.setEsPrivada(request.getEsPrivada());
+        }
+
+        Categoria categoriaSaved = categoriaService.update(categoria);
         return categoriaMapper.toDto(categoriaSaved);
     }
 }
