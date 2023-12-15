@@ -34,6 +34,7 @@ public enum MessageResponse {
 
     /*Success*/
     PURCHASE_CREATED("PURCHASE_CREATED", "Purchase created successfully"),
+    CATEGORY_CREATED("CATEGORY_CREATED", "Category created successfully"),
     PURCHASE_LIST_CREATED("PURCHASE_LIST_CREATED", "Purchase list created successfully"),
     PURCHASE_LIST_UPDATED("PURCHASE_LIST_UPDATED", "Purchase list updated successfully"),
     PURCHASE_UPDATED("PURCHASE_UPDATED", "Purchase updated successfully"),

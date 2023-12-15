@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -28,6 +29,8 @@ public class CompraService {
     }
 
     public Compra save(Compra compra){
+        compra.setCreatedDate(LocalDateTime.now());
+        compra.setLastUpdate(LocalDateTime.now());
         return repository.save(compra);
     }
 
@@ -48,6 +51,7 @@ public class CompraService {
     public Compra update(Compra compra){
         CustomUtilService.ValidateRequired(compra.getId());
         validateCompra(compra.getId());
+        compra.setLastUpdate(LocalDateTime.now());
         return repository.save(compra);
     }
 

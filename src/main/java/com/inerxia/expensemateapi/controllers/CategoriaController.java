@@ -1,9 +1,11 @@
 package com.inerxia.expensemateapi.controllers;
 
 import com.inerxia.expensemateapi.dtos.CategoriaDto;
+import com.inerxia.expensemateapi.dtos.requests.CrearCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.requests.FiltroCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaCategoriaResponse;
 import com.inerxia.expensemateapi.facades.CategoriaFacade;
+import com.inerxia.expensemateapi.utils.MessageResponse;
 import com.inerxia.expensemateapi.utils.StandardResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -67,5 +69,17 @@ public class CategoriaController {
             @PathVariable Integer usuarioCreadorId) {
         var result = facade.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId);
         return ResponseEntity.ok(new StandardResponse<>(result));
+    }
+
+    @PostMapping("/crear-categoria")
+    @Operation(summary = "Crear una categoría")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data inserted successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<CategoriaDto>> crearCategoria(@RequestBody CrearCategoriaRequest request) {
+        var result = facade.crearCategoria(request);
+        return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.CATEGORY_CREATED.getMessage(), MessageResponse.CATEGORY_CREATED.getDescription()));
     }
 }

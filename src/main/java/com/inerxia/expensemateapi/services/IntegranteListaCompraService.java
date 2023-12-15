@@ -12,6 +12,7 @@ import com.inerxia.expensemateapi.utils.enums.ESTADOS_COLABORADORES;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,12 +27,15 @@ public class IntegranteListaCompraService {
     }
 
     public IntegranteListaCompra save(IntegranteListaCompra integranteListaCompra){
+        integranteListaCompra.setCreatedDate(LocalDateTime.now());
+        integranteListaCompra.setLastUpdate(LocalDateTime.now());
         return repository.save(integranteListaCompra);
     }
 
     public IntegranteListaCompra update(IntegranteListaCompra integranteListaCompra){
         CustomUtilService.ValidateRequired(integranteListaCompra.getId());
         validateIntegranteListaCompra(integranteListaCompra.getId());
+        integranteListaCompra.setLastUpdate(LocalDateTime.now());
         return repository.save(integranteListaCompra);
     }
 

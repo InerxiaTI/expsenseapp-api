@@ -1,8 +1,10 @@
 package com.inerxia.expensemateapi.facades;
 
 import com.inerxia.expensemateapi.dtos.CategoriaDto;
+import com.inerxia.expensemateapi.dtos.requests.CrearCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.requests.FiltroCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaCategoriaResponse;
+import com.inerxia.expensemateapi.entities.Categoria;
 import com.inerxia.expensemateapi.mappers.CategoriaMapper;
 import com.inerxia.expensemateapi.services.CategoriaService;
 import com.inerxia.expensemateapi.services.UsuarioService;
@@ -46,5 +48,21 @@ public class CategoriaFacade {
         usuarioService.validateUsuario(usuarioCreadorId);
 
         return categoriaMapper.toDto(categoriaService.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId));
+    }
+
+    public CategoriaDto crearCategoria(CrearCategoriaRequest request){
+        CustomUtilService.ValidateRequired(request);
+        CustomUtilService.ValidateRequired(request.getIdUsuarioCreador());
+        CustomUtilService.ValidateRequired(request.getEsPrivada());
+        CustomUtilService.ValidateRequired(request.getNombre());
+
+        usuarioService.validateUsuario(request.getIdUsuarioCreador());
+
+        var categoria = new Categoria();
+        categoria.setNombre(request.getNombre());
+        categoria.setEsPrivada(request.getEsPrivada());
+        categoria.setUsuarioCreadorId(request.getIdUsuarioCreador());
+        Categoria categoriaSaved = categoriaService.save(categoria);
+        return categoriaMapper.toDto(categoriaSaved);
     }
 }

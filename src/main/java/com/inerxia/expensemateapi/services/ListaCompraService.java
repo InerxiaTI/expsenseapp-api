@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @Service
 @Transactional
@@ -48,6 +49,7 @@ public class ListaCompraService {
     public ListaCompra update(ListaCompra listaCompra){
         CustomUtilService.ValidateRequired(listaCompra.getId());
         validateListaCompra(listaCompra.getId());
+        listaCompra.setLastUpdate(LocalDateTime.now());
         return repository.save(listaCompra);
     }
 
@@ -57,6 +59,8 @@ public class ListaCompraService {
     }
 
     public ListaCompra save(ListaCompra listaCompra, String randomCode){
+        listaCompra.setCreatedDate(LocalDateTime.now());
+        listaCompra.setLastUpdate(LocalDateTime.now());
         ListaCompra listaCompraSaved = repository.save(listaCompra);
 
         listaCompraSaved.setCodigoGenerado(listaCompraSaved.getId().toString().concat(randomCode));

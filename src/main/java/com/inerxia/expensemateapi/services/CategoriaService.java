@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -39,5 +40,11 @@ public class CategoriaService {
 
     public List<Categoria> consultarCategoriasDelCreadorConFiltro(Integer usuarioCreadorId){
         return repository.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId);
+    }
+
+    public Categoria save(Categoria categoria){
+        categoria.setCreatedDate(LocalDateTime.now());
+        categoria.setLastUpdate(LocalDateTime.now());
+        return repository.save(categoria);
     }
 }

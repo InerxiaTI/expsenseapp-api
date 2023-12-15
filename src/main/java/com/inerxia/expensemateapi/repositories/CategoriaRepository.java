@@ -22,7 +22,7 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
             "ORDER BY c.nombre ASC ")
     Page<ConsultaCategoriaResponse> consultarCategoriasConFiltro(@Param("filtro") FiltroCategoriaRequest filtro,
                                                                  Pageable pageable);
-    
+
     @Query(value = "SELECT c " +
             "FROM Categoria c " +
             "WHERE (c.usuarioCreadorId = :usuarioCreadorId) " +
