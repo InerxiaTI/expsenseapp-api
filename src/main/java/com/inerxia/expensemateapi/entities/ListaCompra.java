@@ -44,4 +44,12 @@ public class ListaCompra {
 
     @Column(name = "codigo_generado")
     private String codigoGenerado;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
+
+    @NotNull
+    @Column(name = "last_update", nullable = false)
+    private LocalDateTime lastUpdate;
 }

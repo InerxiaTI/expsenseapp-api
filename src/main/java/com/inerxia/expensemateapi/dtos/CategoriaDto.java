@@ -3,6 +3,7 @@ package com.inerxia.expensemateapi.dtos;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Data
 public class CategoriaDto {
@@ -12,6 +13,15 @@ public class CategoriaDto {
     private String nombre;
 
     @NotNull
+    private Boolean esPrivada;
+
+    @NotNull
     private Integer usuarioCreadorId;
     private UsuarioDto usuarioCreador;
+
+    @NotNull
+    private LocalDateTime createdDate;
+
+    @NotNull
+    private LocalDateTime lastUpdate;
 }

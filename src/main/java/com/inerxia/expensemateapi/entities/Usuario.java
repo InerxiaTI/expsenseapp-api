@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 @Table(name = "usuarios")
 @Entity
@@ -34,4 +35,12 @@ public class Usuario {
     @NotNull
     @Column(name = "contrasena", nullable = false)
     private String contrasena;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
+
+    @NotNull
+    @Column(name = "last_update", nullable = false)
+    private LocalDateTime lastUpdate;
 }

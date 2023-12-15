@@ -31,4 +31,10 @@ public class CompraDto {
     private String descripcion;
     private Double valor;
     private LocalDateTime fechaCreacion;
+
+    @NotNull
+    private LocalDateTime createdDate;
+
+    @NotNull
+    private LocalDateTime lastUpdate;
 }

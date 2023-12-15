@@ -61,4 +61,12 @@ public class Compra {
     @NotNull
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
+
+    @NotNull
+    @Column(name = "created_date", nullable = false)
+    private LocalDateTime createdDate;
+
+    @NotNull
+    @Column(name = "last_update", nullable = false)
+    private LocalDateTime lastUpdate;
 }

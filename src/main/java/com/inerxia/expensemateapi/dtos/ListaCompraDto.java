@@ -31,6 +31,12 @@ public class ListaCompraDto {
     @NotNull
     private String codigoGenerado;
 
+    @NotNull
+    private LocalDateTime createdDate;
+
+    @NotNull
+    private LocalDateTime lastUpdate;
+
     public ListaCompraDto(Integer id, String nombre, LocalDateTime fechaCreacion, String estado, LocalDateTime fechaFinalizado,
                           Double totalCompras, Integer usuarioCreadorId, String codigoGenerado) {
         this.id = id;

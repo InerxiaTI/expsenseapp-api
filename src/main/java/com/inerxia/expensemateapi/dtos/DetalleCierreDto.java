@@ -25,4 +25,10 @@ public class DetalleCierreDto {
     private Double totalDeuda;
     private Boolean aprobado;
     private LocalDateTime fechaAprobacion;
+
+    @NotNull
+    private LocalDateTime createdDate;
+
+    @NotNull
+    private LocalDateTime lastUpdate;
 }
