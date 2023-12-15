@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
 
     @Query(value = "SELECT new com.inerxia.expensemateapi.dtos.responses.ConsultaCategoriaResponse(" +
@@ -20,4 +22,11 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
             "ORDER BY c.nombre ASC ")
     Page<ConsultaCategoriaResponse> consultarCategoriasConFiltro(@Param("filtro") FiltroCategoriaRequest filtro,
                                                                  Pageable pageable);
+    
+    @Query(value = "SELECT c " +
+            "FROM Categoria c " +
+            "WHERE (c.usuarioCreadorId = :usuarioCreadorId) " +
+            "AND (c.esPrivada = false) " +
+            "ORDER BY c.nombre ASC ")
+    List<Categoria> consultarCategoriasDelCreadorConFiltro(@Param("usuarioCreadorId") Integer usuarioCreadorId);
 }

@@ -1,5 +1,6 @@
 package com.inerxia.expensemateapi.controllers;
 
+import com.inerxia.expensemateapi.dtos.CategoriaDto;
 import com.inerxia.expensemateapi.dtos.requests.FiltroCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaCategoriaResponse;
 import com.inerxia.expensemateapi.facades.CategoriaFacade;
@@ -18,10 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/categoria")
@@ -53,6 +53,19 @@ public class CategoriaController {
     public ResponseEntity<StandardResponse<Page<ConsultaCategoriaResponse>>> consultarCategoriasConFiltro(
             @RequestBody FiltroCategoriaRequest filtro, Pageable pageable) {
         var result = facade.consultarCategoriasConFiltro(filtro, pageable);
+        return ResponseEntity.ok(new StandardResponse<>(result));
+    }
+
+    @GetMapping("/filter-categorias-by-creador/{usuarioCreadorId}")
+    @Operation(summary = "Consulta las categorías públicas del creador")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data inserted successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<List<CategoriaDto>>> consultarCategoriasDelCreadorConFiltro(
+            @PathVariable Integer usuarioCreadorId) {
+        var result = facade.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId);
         return ResponseEntity.ok(new StandardResponse<>(result));
     }
 }

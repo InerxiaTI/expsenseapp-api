@@ -1,5 +1,6 @@
 package com.inerxia.expensemateapi.facades;
 
+import com.inerxia.expensemateapi.dtos.CategoriaDto;
 import com.inerxia.expensemateapi.dtos.requests.FiltroCategoriaRequest;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaCategoriaResponse;
 import com.inerxia.expensemateapi.mappers.CategoriaMapper;
@@ -14,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -36,5 +38,13 @@ public class CategoriaFacade {
         usuarioService.validateUsuario(filtro.getIdUsuarioCreador());
 
         return categoriaService.consultarCategoriasConFiltro(filtro, pageable);
+    }
+
+    public List<CategoriaDto> consultarCategoriasDelCreadorConFiltro(Integer usuarioCreadorId){
+        CustomUtilService.ValidateRequired(usuarioCreadorId);
+
+        usuarioService.validateUsuario(usuarioCreadorId);
+
+        return categoriaMapper.toDto(categoriaService.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId));
     }
 }

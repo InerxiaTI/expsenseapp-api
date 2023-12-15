@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -34,5 +35,9 @@ public class CategoriaService {
 
     public Page<ConsultaCategoriaResponse> consultarCategoriasConFiltro(@Param("filtro") FiltroCategoriaRequest filtro, Pageable pageable){
         return repository.consultarCategoriasConFiltro(filtro, pageable);
+    }
+
+    public List<Categoria> consultarCategoriasDelCreadorConFiltro(Integer usuarioCreadorId){
+        return repository.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId);
     }
 }
