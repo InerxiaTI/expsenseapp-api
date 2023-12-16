@@ -13,10 +13,10 @@ spring:
             non_contextual_creation: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/expensemate-db
+    url: jdbc:postgresql://${HOST}:${PORT}/${DBNAME}
     driver-class-name: org.postgresql.Driver
-    username: postgres
-    password: root
+    username: ${USER}
+    password: ${PASS}
     hikari:
       idle-timeout: 10000
       pool-name: ApiPool
