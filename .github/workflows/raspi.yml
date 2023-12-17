@@ -35,6 +35,7 @@ jobs:
         run: |
           cd ${{ secrets.WORK_DIR }} &&
           cd $REPO_NAME &&
+          pwd
           sh scripts/build-docker.sh
   deploy:
     runs-on: self-hosted
@@ -42,7 +43,7 @@ jobs:
       - name: deploy
         run: |
           cd ${{ secrets.WORK_DIR }} &&
-          cd $REPO_NAME &&
+          cd expsenseapp-api &&
           sh scripts/run-docker.sh
           
   
