@@ -15,6 +15,7 @@ on:
 
 env:
   REPO_NAME: expsenseapp-api
+  BRANCH_DEF: config-pipe
 
 jobs:
   build:
@@ -24,9 +25,10 @@ jobs:
         run: |
           cd ${{ secrets.WORK_DIR }} &&
           if [ ! -d 'expsenseapp-api' ]; then
-            git clone git@github.com:InerxiaTI/expsenseapp-api.git;
+            git clone -b $BRANCH_DEF git@github.com:InerxiaTI/expsenseapp-api.git;
           else
-            cd expsenseapp-api && git pull origin master;
+            git checkout $BRANCH_DEF
+            cd expsenseapp-api && git pull origin $BRANCH_DEF;
           fi
       - name: build
         run: |
