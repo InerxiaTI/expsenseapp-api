@@ -28,6 +28,12 @@ jobs:
           else
             cd $REPO_NAME && git pull origin master;
           fi
+      - name: build
+        run: |
+          cd ${{ secrets.WORK_DIR }} &&
+          cd $REPO_NAME &&
+          sh scripts/build-docker.sh
+          
   
 
    
