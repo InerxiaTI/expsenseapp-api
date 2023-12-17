@@ -22,13 +22,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set color
-        id: color-selector
-        run: echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
-      - name: Get color
+      - name: Get repository name
+        id: repo_name
+        run: echo "REPOS_NAME=$GITHUB_REPOSITORY" >> "$GITHUB_OUTPUT"
+      - name: Get repo name
         env:
-          SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }}
-        run: echo "The selected color is $SELECTED_COLOR"
+          REPOSITORY_NAME: ${{ steps.repo_name.outputs.REPOS_NAME }}
+        run: echo "The repo name is $REPOSITORY_NAME"
   
 
    
