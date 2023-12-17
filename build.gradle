@@ -44,6 +44,12 @@ dependencies {
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 }
 
+tasks {
+	bootJar {
+		archiveFileName.set("expense-mate-api.jar")
+	}
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
