@@ -31,4 +31,4 @@ fi
 
 docker build --tag $IMAGE_NAME \
 --build-arg PASS=${DB_PASS_EXPENSE} --build-arg USER=${DB_USER_EXPENSE} \
---build-arg HOST=${DB_HOST_EXPENSE} --build-arg PORT=${DB_PORT_EXPENSE} --build-arg DBNAME=${DBNAME_EXPENSE} .
+--build-arg HOST=${DB_HOST_EXPENSE} --build-arg PORT=5432 --build-arg DBNAME=${DBNAME_EXPENSE} .
