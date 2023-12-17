@@ -19,11 +19,11 @@ ENV HOST=${DB_HOST_EXPENSE}
 ENV PORT=${PORT}
 
 # Imprimir el valor de las variables de entorno
-RUN echo "PASS_DB=$PASS_DB"
+RUN echo "PASS_DB=$PASS"
 RUN echo "USER_DB=$USER"
-RUN echo "HOST_DB=$HOST_DB"
-RUN echo "PORT_DB=$PORT_DB"
-RUN echo "DBNAME_DB=$DBNAME_DB"
+RUN echo "HOST_DB=$HOST"
+RUN echo "PORT_DB=$PORT"
+RUN echo "DBNAME_DB=$DBNAME"
 
 RUN chmod +x ./gradlew
 
