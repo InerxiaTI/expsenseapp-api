@@ -20,8 +20,8 @@ ENV PORT=${PORT}
 
 # Imprimir el valor de las variables de entorno
 RUN echo "PASS_DB=$PASS"
-RUN echo "USER_DB=$USER"
-RUN echo "HOST_DB=$HOST"
+RUN echo "USER USER USER =$USER"
+RUN echo "HOST HOST=$HOST"
 RUN echo "PORT_DB=$PORT"
 RUN echo "DBNAME_DB=$DBNAME"
 
