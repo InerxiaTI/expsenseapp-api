@@ -1,0 +1,24 @@
+FROM adoptopenjdk/openjdk11:jdk-11.0.19_7-ubuntu-slim
+WORKDIR /opt/app
+
+# Copiar los archivos de la aplicación
+COPY . .
+
+# Definir las variables de entorno
+ARG PASS_DB
+ARG USER_DB
+ENV PASS_DB=${PASS_DB}
+ENV USER_DB=${USER_DB}
+CMD echo "El valor de PASS_DB es: $PASS_DB" && echo "El valor de USER_DB es: $USER_DB"
+
+# Imprimir el valor de las variables de entorno
+RUN echo "PASS_DB=$PASS_DB"
+RUN echo "USER_DB=$USER_DB"
+
+RUN chmod +x ./gradlew
+
+# Compilar la aplicación
+RUN ./gradlew clean build -x test
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "build/libs/appuntes-api.jar"]
