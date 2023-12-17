@@ -16,9 +16,6 @@ on:
 env:
   REPO_NAME: expsenseapp-api
 
-permissions:
-  contents: read
-
 jobs:
   build:
 
