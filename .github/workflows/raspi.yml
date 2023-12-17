@@ -23,10 +23,10 @@ jobs:
       - name: connect and pull
         run: |
           cd ${{ secrets.WORK_DIR }} &&
-          if [ ! -d '$REPO_NAME' ]; then
+          if [ ! -d 'expsenseapp-api' ]; then
             git clone git@github.com:InerxiaTI/expsenseapp-api.git;
           else
-            cd $REPO_NAME && git pull origin master;
+            cd expsenseapp-api && git pull origin master;
           fi
       - name: build
         run: |
