@@ -12,19 +12,11 @@ ARG DBNAME
 ARG HOST
 ARG PORT
 
-# Imprimir los valores de las variables de construcción
-RUN echo "PASS_BUILD_ARG=$PASS" && \
-    echo "USER_BUILD_ARG=$DB_USER_EXPENSE" && \
-    echo "HOST_BUILD_ARG=$DB_HOST_EXPENSE" && \
-    echo "PORT_BUILD_ARG=$PORT" && \
-    echo "DBNAME_BUILD_ARG=$DBNAME"
-
-
-ENV PASS_DB=${PASS}
+ENV PASS=${PASS}
 ENV USER=${DB_USER_EXPENSE}
-ENV DBNAME_DB=${DBNAME}
-ENV HOST_DB=${DB_HOST_EXPENSE}
-ENV PORT_DB=${PORT}
+ENV DBNAME=${DBNAME}
+ENV HOST=${DB_HOST_EXPENSE}
+ENV PORT=${PORT}
 
 # Imprimir el valor de las variables de entorno
 RUN echo "PASS_DB=$PASS_DB"
