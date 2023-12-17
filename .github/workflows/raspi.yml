@@ -27,8 +27,7 @@ jobs:
           if [ ! -d 'expsenseapp-api' ]; then
             git clone -b $BRANCH_DEF git@github.com:InerxiaTI/expsenseapp-api.git;
           else
-            git checkout $BRANCH_DEF
-            cd expsenseapp-api && git pull origin $BRANCH_DEF;
+            cd expsenseapp-api && git checkout $BRANCH_DEF && git pull origin $BRANCH_DEF;
           fi
       - name: build
         run: |
