@@ -15,7 +15,7 @@ ARG PORT
 ENV PASS=${PASS}
 ENV USER=${DB_USER_EXPENSE}
 ENV DBNAME=${DBNAME}
-ENV HOST=${DB_HOST_EXPENSE}
+ENV HOST=${HOST}
 ENV PORT=${PORT}
 
 # Imprimir el valor de las variables de entorno
