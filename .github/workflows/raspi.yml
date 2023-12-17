@@ -17,7 +17,7 @@ env:
   REPO_NAME: expsenseapp-api
 
 jobs:
-  fetch:
+  build:
     runs-on: self-hosted
     steps:      
       - name: connect and pull
@@ -28,18 +28,12 @@ jobs:
           else
             cd expsenseapp-api && git pull origin master;
           fi
-  build:
-    runs-on: self-hosted
-    steps:
       - name: build
         run: |
           cd ${{ secrets.WORK_DIR }} &&
           cd $REPO_NAME &&
           pwd
           sh scripts/build-docker.sh
-  deploy:
-    runs-on: self-hosted
-    steps:
       - name: deploy
         run: |
           cd ${{ secrets.WORK_DIR }} &&
