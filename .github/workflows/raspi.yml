@@ -9,12 +9,13 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "qa" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "qa" ]
 
 env:
   REPO_NAME: expsenseapp-api
+  BRANCH_DEF: qa
 
 jobs:
   build:
@@ -24,15 +25,21 @@ jobs:
         run: |
           cd ${{ secrets.WORK_DIR }} &&
           if [ ! -d 'expsenseapp-api' ]; then
-            git clone git@github.com:InerxiaTI/expsenseapp-api.git;
+            git clone -b $BRANCH_DEF git@github.com:InerxiaTI/expsenseapp-api.git;
           else
-            cd expsenseapp-api && git pull origin master;
+            cd expsenseapp-api && git fetch origin && git checkout $BRANCH_DEF && git pull origin $BRANCH_DEF;
           fi
       - name: build
         run: |
           cd ${{ secrets.WORK_DIR }} &&
           cd $REPO_NAME &&
+          pwd
           sh scripts/build-docker.sh
+      - name: deploy
+        run: |
+          cd ${{ secrets.WORK_DIR }} &&
+          cd expsenseapp-api &&
+          sh scripts/run-docker.sh
           
   
 

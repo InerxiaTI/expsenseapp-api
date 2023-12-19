@@ -3,6 +3,7 @@ package com.inerxia.expensemateapi.configs;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.responses.ApiResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,4 +17,7 @@ public class OpenApiConfig {
                 .info(new Info().title("API - Inerxia - Expense Mate API").description(
                         "This is the documentation for Inerxia - Expense Mate API"));
     }
+
+    @Bean
+    public ApiResponse apiResponse() {return new ApiResponse();}
 }
