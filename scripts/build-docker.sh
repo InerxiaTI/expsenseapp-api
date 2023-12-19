@@ -36,7 +36,7 @@ if docker rmi $IMAGE_NAME 2>&1 | grep -q "No such"; then
 else
   echo "$IMAGE_NAME has been removed. Good job!"
 fi
-
+# test1
 # ./gradlew clean build -x test
 
 docker build --tag $IMAGE_NAME \
