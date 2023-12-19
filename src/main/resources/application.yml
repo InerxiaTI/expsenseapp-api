@@ -14,4 +14,7 @@ spring:
   jackson:
     serialization:
       write-dates-as-timestamps: false
+springdoc:
+  swagger-ui:
+    enabled: true
 
