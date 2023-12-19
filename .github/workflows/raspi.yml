@@ -9,13 +9,13 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "config-pipe" ]
+    branches: [ "qa" ]
   pull_request:
-    branches: [ "config-pipe" ]
+    branches: [ "qa" ]
 
 env:
   REPO_NAME: expsenseapp-api
-  BRANCH_DEF: config-pipe
+  BRANCH_DEF: qa
 
 jobs:
   build:
