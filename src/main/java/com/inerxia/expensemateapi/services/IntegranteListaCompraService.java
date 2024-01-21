@@ -57,7 +57,7 @@ public class IntegranteListaCompraService {
             }
             throw new BusinessException(MessageResponse.DUPLICATE_USER_ON_PURCHASE_LIST);
         }
-        return repository.save(integranteListaCompra);
+        return save(integranteListaCompra);
     }
 
     public List<IntegranteListaCompra> findAllByListaCompraId(Integer listaCompraId){
