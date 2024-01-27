@@ -122,8 +122,8 @@ public class ListaCompraFacade {
         filter.setIdListaCompras(idListaCompras);
         if(!estados.isEmpty()){
             filter.setEstados(estados.stream()
-                                      .map(Enum::name)
-                                      .collect(Collectors.toList()));
+                    .map(Enum::name)
+                    .collect(Collectors.toList()));
         }
         return integranteListaCompraService.consultarIntegrantesFilter(filter);
     }
@@ -141,7 +141,7 @@ public class ListaCompraFacade {
 
         Map<Integer, Double> totalValoresPorUsuariosCompra = compras.stream()
                 .collect(Collectors.groupingBy(Compra::getUsuarioCompraId,
-                                               Collectors.summingDouble(Compra::getValor)));
+                        Collectors.summingDouble(Compra::getValor)));
 
         var estados = List.of(ESTADOS_COLABORADORES.APROBADO);
         List<IntegranteListaCompra> integrantes = getIntegrantesPorEstado(idListaCompras, estados);

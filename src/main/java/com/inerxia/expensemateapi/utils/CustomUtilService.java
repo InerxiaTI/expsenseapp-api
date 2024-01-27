@@ -11,4 +11,10 @@ public class CustomUtilService {
             throw new RequiredException(MessageResponse.MISSING_REQUIRED_FIELD);
         }
     }
+
+    public static void ValidateBooleanRequired(Object object){
+        if (!(object instanceof Boolean)) {
+            throw new RequiredException(MessageResponse.MISSING_REQUIRED_FIELD);
+        }
+    }
 }
