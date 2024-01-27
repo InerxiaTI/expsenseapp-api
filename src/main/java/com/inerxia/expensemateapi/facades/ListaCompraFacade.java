@@ -112,6 +112,7 @@ public class ListaCompraFacade {
         }
 
         listaCompra.setEstado(ESTADOS_LISTA_COMPRAS.PENDIENTE.name());
+        listaCompra.setFechaInicializacion(LocalDateTime.now());
         ListaCompra listaCompraUpdated = listaCompraService.update(listaCompra);
         return listaCompraMapper.toDto(listaCompraUpdated);
     }
@@ -131,6 +132,11 @@ public class ListaCompraFacade {
         CustomUtilService.ValidateRequired(idListaCompras);
 
         ListaCompra listaCompra = listaCompraService.findById(idListaCompras);
+
+        if(listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())){
+            throw new BusinessException(MessageResponse.PURCHASE_LIST_CLOSED);
+        }
+
         List<Compra> compras = compraService.consultarComprasByListaCompra(listaCompra.getId());
 
         Map<Integer, Double> totalValoresPorUsuariosCompra = compras.stream()
@@ -171,6 +177,7 @@ public class ListaCompraFacade {
 
     private ListaCompra cerrarListaCompra(ListaCompra listaCompra) {
         listaCompra.setEstado(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name());
+        listaCompra.setFechaCierre(LocalDateTime.now());
         return listaCompraService.update(listaCompra);
     }
 

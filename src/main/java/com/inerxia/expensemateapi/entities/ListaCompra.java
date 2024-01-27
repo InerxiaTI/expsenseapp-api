@@ -25,11 +25,19 @@ public class ListaCompra {
     private LocalDateTime fechaCreacion;
 
     @NotNull
-    @Column(name = "estado", nullable = false)
-    private String estado;
+    @Column(name = "fecha_inicializacion")
+    private LocalDateTime fechaInicializacion;
+
+    @NotNull
+    @Column(name = "fecha_cierre")
+    private LocalDateTime fechaCierre;
 
     @Column(name = "fecha_finalizado")
     private LocalDateTime fechaFinalizado;
+
+    @NotNull
+    @Column(name = "estado", nullable = false)
+    private String estado;
 
     @Column(name = "total_compras", nullable = false)
     private Double totalCompras;

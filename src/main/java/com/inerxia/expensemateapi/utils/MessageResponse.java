@@ -31,6 +31,7 @@ public enum MessageResponse {
     HAS_PENDING_REQUESTS("HAS_PENDING_REQUESTS", "It is not allowed to start the list with pending requests."),
     TOTAL_PERCENTAGES_MUST_BE_100_PERCENT("TOTAL_PERCENTAGES_MUST_BE_100_PERCENT", "Total percentages must be 100 percent."),
     CATEGORY_HAS_ASSOCIATED_PURCHASES("CATEGORY_HAS_ASSOCIATED_PURCHASES", "Category has associated purchases."),
+    PURCHASE_LIST_CLOSED("PURCHASE_LIST_CLOSED", "The purchase list is already closed."),
 
 
     /*Success*/
