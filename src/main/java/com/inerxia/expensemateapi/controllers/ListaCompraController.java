@@ -74,8 +74,9 @@ public class ListaCompraController {
             @ApiResponse(responseCode = "400", description = "The request is invalid"),
             @ApiResponse(responseCode = "500", description = "Internal error processing response"),
     })
-    public ResponseEntity<StandardResponse<ListaCompraDto>> inicializarListaCompras(@PathVariable Integer idListaCompras) {
-        var result = facade.inicializarListaCompras(idListaCompras);
+    public ResponseEntity<StandardResponse<ListaCompraDto>> inicializarListaCompras(@PathVariable Integer idListaCompras,
+                                                                                    @RequestParam(name="back", required = false) Boolean back) {
+        var result = facade.inicializarListaCompras(idListaCompras, back);
         return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.PURCHASE_LIST_UPDATED.getMessage(), MessageResponse.PURCHASE_LIST_UPDATED.getDescription()));
     }
 

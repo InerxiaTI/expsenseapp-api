@@ -51,4 +51,8 @@ public class DetalleCierreService {
         detalleCierre.setLastUpdate(LocalDateTime.now());
         return repository.save(detalleCierre);
     }
+
+    public void deleteByListaCompraId(Integer listaCompraId) {
+        repository.deleteByListaCompraId(listaCompraId);
+    }
 }

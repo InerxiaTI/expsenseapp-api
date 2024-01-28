@@ -3,9 +3,11 @@ package com.inerxia.expensemateapi.repositories;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaDetalleCierreResponse;
 import com.inerxia.expensemateapi.entities.DetalleCierre;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface DetalleCierreRepository extends JpaRepository<DetalleCierre, Integer> {
@@ -22,4 +24,8 @@ public interface DetalleCierreRepository extends JpaRepository<DetalleCierre, In
             "WHERE (dc.listaCompraId = :idListaCompras) ")
     List<ConsultaDetalleCierreResponse> consultarDetalleCierre(@Param("idListaCompras") Integer idListaCompras);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM DetalleCierre d WHERE d.listaCompraId = :listaCompraId")
+    void deleteByListaCompraId(Integer listaCompraId);
 }

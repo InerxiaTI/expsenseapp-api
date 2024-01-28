@@ -26,10 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,33 +88,41 @@ public class ListaCompraFacade {
         return listaCompraMapper.toDto(listaCompraSaved);
     }
 
-    public ListaCompraDto inicializarListaCompras(Integer idListaCompras) {
+    public ListaCompraDto inicializarListaCompras(Integer idListaCompras, Boolean back) {
         CustomUtilService.ValidateRequired(idListaCompras);
 
         ListaCompra listaCompra = listaCompraService.findById(idListaCompras);
 
         if(listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())){
-            throw new BusinessException(MessageResponse.PURCHASE_LIST_CLOSED);
+            throw new BusinessException(MessageResponse.PURCHASE_LIST_PENDING);
         }
 
-        if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.CONFIGURANDO.name())){
-            throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_CONFIGURING);
-        }
+        if(Objects.nonNull(back) && back){
+            if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())){
+                throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_CLOSED);
+            }
+            detalleCierreService.deleteByListaCompraId(listaCompra.getId());
+            listaCompra.setFechaCierre(null);
+        }else{
+            if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.CONFIGURANDO.name())){
+                throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_CONFIGURING);
+            }
 
-        var estados = List.of(ESTADOS_COLABORADORES.PENDIENTE);
-        List<IntegranteListaCompra> integrantesPendientes = getIntegrantesPorEstado(idListaCompras, estados);
+            var estados = List.of(ESTADOS_COLABORADORES.PENDIENTE);
+            List<IntegranteListaCompra> integrantesPendientes = getIntegrantesPorEstado(idListaCompras, estados);
 
-        if (!integrantesPendientes.isEmpty()) {
-            throw new BusinessException(MessageResponse.HAS_PENDING_REQUESTS);
-        }
+            if (!integrantesPendientes.isEmpty()) {
+                throw new BusinessException(MessageResponse.HAS_PENDING_REQUESTS);
+            }
 
-        estados = List.of(ESTADOS_COLABORADORES.APROBADO);
-        List<IntegranteListaCompra> integrantesAprobados = getIntegrantesPorEstado(idListaCompras, estados);
+            estados = List.of(ESTADOS_COLABORADORES.APROBADO);
+            List<IntegranteListaCompra> integrantesAprobados = getIntegrantesPorEstado(idListaCompras, estados);
 
-        Double totalPorcentajes = integranteListaCompraService.sumarPorcentajesIntegrantes(integrantesAprobados);
+            Double totalPorcentajes = integranteListaCompraService.sumarPorcentajesIntegrantes(integrantesAprobados);
 
-        if (totalPorcentajes != 100) {
-            throw new BusinessException(MessageResponse.TOTAL_PERCENTAGES_MUST_BE_100_PERCENT);
+            if (totalPorcentajes != 100) {
+                throw new BusinessException(MessageResponse.TOTAL_PERCENTAGES_MUST_BE_100_PERCENT);
+            }
         }
 
         ListaCompra listaCompraUpdated = inicializarListaCompra(listaCompra);
