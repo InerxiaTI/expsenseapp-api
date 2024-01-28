@@ -48,7 +48,6 @@ public class Compra {
     @JoinColumn(name = "usuario_registro_fk", insertable = false, updatable = false)
     private Usuario usuarioRegistro;
 
-    @NotNull
     @Column(name = "fecha_compra", nullable = false)
     private LocalDateTime fechaCompra;
 
@@ -66,7 +65,6 @@ public class Compra {
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
-    @NotNull
     @Column(name = "last_update", nullable = false)
     private LocalDateTime lastUpdate;
 }

@@ -5,6 +5,7 @@ import com.inerxia.expensemateapi.dtos.requests.CrearListaCompraRequest;
 import com.inerxia.expensemateapi.dtos.requests.DeudaBidireccional;
 import com.inerxia.expensemateapi.dtos.requests.FilterConsultaIntegrantesRequest;
 import com.inerxia.expensemateapi.dtos.requests.FilterListasComprasRequest;
+import com.inerxia.expensemateapi.dtos.responses.ConsultaDetalleCierreResponse;
 import com.inerxia.expensemateapi.entities.Compra;
 import com.inerxia.expensemateapi.entities.DetalleCierre;
 import com.inerxia.expensemateapi.entities.IntegranteListaCompra;
@@ -95,6 +96,14 @@ public class ListaCompraFacade {
 
         ListaCompra listaCompra = listaCompraService.findById(idListaCompras);
 
+        if(listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())){
+            throw new BusinessException(MessageResponse.PURCHASE_LIST_CLOSED);
+        }
+
+        if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.CONFIGURANDO.name())){
+            throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_CONFIGURING);
+        }
+
         var estados = List.of(ESTADOS_COLABORADORES.PENDIENTE);
         List<IntegranteListaCompra> integrantesPendientes = getIntegrantesPorEstado(idListaCompras, estados);
 
@@ -111,10 +120,14 @@ public class ListaCompraFacade {
             throw new BusinessException(MessageResponse.TOTAL_PERCENTAGES_MUST_BE_100_PERCENT);
         }
 
+        ListaCompra listaCompraUpdated = inicializarListaCompra(listaCompra);
+        return listaCompraMapper.toDto(listaCompraUpdated);
+    }
+
+    private ListaCompra inicializarListaCompra(ListaCompra listaCompra) {
         listaCompra.setEstado(ESTADOS_LISTA_COMPRAS.PENDIENTE.name());
         listaCompra.setFechaInicializacion(LocalDateTime.now());
-        ListaCompra listaCompraUpdated = listaCompraService.update(listaCompra);
-        return listaCompraMapper.toDto(listaCompraUpdated);
+        return listaCompraService.update(listaCompra);
     }
 
     private List<IntegranteListaCompra> getIntegrantesPorEstado(Integer idListaCompras, List<ESTADOS_COLABORADORES> estados){
@@ -135,6 +148,10 @@ public class ListaCompraFacade {
 
         if(listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())){
             throw new BusinessException(MessageResponse.PURCHASE_LIST_CLOSED);
+        }
+
+        if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())){
+            throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_PENDING);
         }
 
         List<Compra> compras = compraService.consultarComprasByListaCompra(listaCompra.getId());
@@ -225,5 +242,35 @@ public class ListaCompraFacade {
             }
         });
         return deudas;
+    }
+
+    public ListaCompraDto finalizarListaCompras(Integer idListaCompras){
+        CustomUtilService.ValidateRequired(idListaCompras);
+
+        ListaCompra listaCompra = listaCompraService.findById(idListaCompras);
+
+        if(listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.FINALIZADO.name())){
+            throw new BusinessException(MessageResponse.PURCHASE_LIST_FINALIZED);
+        }
+
+        if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())){
+            throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_CLOSED);
+        }
+
+        List<ConsultaDetalleCierreResponse> detalleCierre = detalleCierreService.consultarDetalleCierre(listaCompra.getId());
+
+        boolean allApproved = detalleCierre.stream().allMatch(detalle -> Boolean.TRUE.equals(detalle.getAprobado()));
+        if(!allApproved){
+            throw new BusinessException(MessageResponse.DEBTS_NOT_CLOSED);
+        }
+
+        ListaCompra listaCompraUpdated = finalizarListaCompra(listaCompra);
+        return listaCompraMapper.toDto(listaCompraUpdated);
+    }
+
+    private ListaCompra finalizarListaCompra(ListaCompra listaCompra) {
+        listaCompra.setEstado(ESTADOS_LISTA_COMPRAS.FINALIZADO.name());
+        listaCompra.setFechaFinalizado(LocalDateTime.now());
+        return listaCompraService.update(listaCompra);
     }
 }

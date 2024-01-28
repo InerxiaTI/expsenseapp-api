@@ -16,8 +16,6 @@ public class IntegranteListaCompraDto {
     @NotNull
     private Integer usuarioId;
     private UsuarioDto usuario;
-
-    @NotNull
     private Double porcentaje;
 
     @NotNull
@@ -29,6 +27,5 @@ public class IntegranteListaCompraDto {
     @NotNull
     private LocalDateTime createdDate;
 
-    @NotNull
     private LocalDateTime lastUpdate;
 }

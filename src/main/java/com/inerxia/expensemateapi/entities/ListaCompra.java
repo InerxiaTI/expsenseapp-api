@@ -24,11 +24,9 @@ public class ListaCompra {
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
-    @NotNull
     @Column(name = "fecha_inicializacion")
     private LocalDateTime fechaInicializacion;
 
-    @NotNull
     @Column(name = "fecha_cierre")
     private LocalDateTime fechaCierre;
 
@@ -57,7 +55,6 @@ public class ListaCompra {
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
-    @NotNull
     @Column(name = "last_update", nullable = false)
     private LocalDateTime lastUpdate;
 }

@@ -90,4 +90,16 @@ public class ListaCompraController {
         var result = facade.cerrarListaCompras(idListaCompras);
         return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.PURCHASE_LIST_UPDATED.getMessage(), MessageResponse.PURCHASE_LIST_UPDATED.getDescription()));
     }
+
+    @PutMapping("/finalizar-lista-compras/{idListaCompras}")
+    @Operation(summary = "Finaliza la lista de compras")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data inserted successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<ListaCompraDto>> finalizarListaCompras(@PathVariable Integer idListaCompras) {
+        var result = facade.finalizarListaCompras(idListaCompras);
+        return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.PURCHASE_LIST_UPDATED.getMessage(), MessageResponse.PURCHASE_LIST_UPDATED.getDescription()));
+    }
 }

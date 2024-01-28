@@ -33,7 +33,12 @@ public enum MessageResponse {
     TOTAL_PERCENTAGES_MUST_BE_100_PERCENT("TOTAL_PERCENTAGES_MUST_BE_100_PERCENT", "Total percentages must be 100 percent."),
     CATEGORY_HAS_ASSOCIATED_PURCHASES("CATEGORY_HAS_ASSOCIATED_PURCHASES", "Category has associated purchases."),
     PURCHASE_LIST_CLOSED("PURCHASE_LIST_CLOSED", "The purchase list is already closed."),
+    PURCHASE_LIST_FINALIZED("PURCHASE_LIST_FINALIZED", "The purchase list is already finalized."),
+    PURCHASE_LIST_PENDING("PURCHASE_LIST_PENDING", "The purchase list is already pending."),
     PURCHASE_LIST_NOT_CLOSED("PURCHASE_LIST_NOT_CLOSED", "The purchase list must be in EN_CIERRE status"),
+    PURCHASE_LIST_NOT_CONFIGURING("PURCHASE_LIST_NOT_CONFIGURING", "The shopping list must be in CONFIGURANDO state to be able to initialize it"),
+    PURCHASE_LIST_NOT_PENDING("PURCHASE_LIST_NOT_PENDING", "The purchase list must be in PENDIENTE state to be able to close it"),
+    DEBTS_NOT_CLOSED("DEBTS_NOT_CLOSED", "All debts must be closed"),
 
 
     /*Success*/

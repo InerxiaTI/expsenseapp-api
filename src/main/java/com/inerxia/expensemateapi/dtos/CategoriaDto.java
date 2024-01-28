@@ -22,6 +22,5 @@ public class CategoriaDto {
     @NotNull
     private LocalDateTime createdDate;
 
-    @NotNull
     private LocalDateTime lastUpdate;
 }

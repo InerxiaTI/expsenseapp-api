@@ -25,16 +25,15 @@ public class CompraDto {
     private Integer usuarioRegistroId;
     private UsuarioDto usuarioRegistro;
 
-    @NotNull
     private LocalDateTime fechaCompra;
-
     private String descripcion;
     private Double valor;
+
+    @NotNull
     private LocalDateTime fechaCreacion;
 
     @NotNull
     private LocalDateTime createdDate;
 
-    @NotNull
     private LocalDateTime lastUpdate;
 }
