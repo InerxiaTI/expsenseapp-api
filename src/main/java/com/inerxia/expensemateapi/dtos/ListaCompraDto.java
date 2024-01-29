@@ -15,13 +15,13 @@ public class ListaCompraDto {
     @NotNull
     private LocalDateTime fechaCreacion;
 
-    @NotNull
-    private String estado;
-
-    @NotNull
+    private LocalDateTime fechaInicializacion;
+    private LocalDateTime fechaCierre;
     private LocalDateTime fechaFinalizado;
 
     @NotNull
+    private String estado;
+
     private Double totalCompras;
 
     @NotNull

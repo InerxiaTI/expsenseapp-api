@@ -48,14 +48,13 @@ public class DetalleCierre {
     @Column(name = "aprobado", nullable = false)
     private Boolean aprobado;
 
-    @Column(name = "fecha_aprobacion", nullable = false)
+    @Column(name = "fecha_aprobacion")
     private LocalDateTime fechaAprobacion;
 
     @NotNull
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
-    @NotNull
     @Column(name = "last_update", nullable = false)
     private LocalDateTime lastUpdate;
 }

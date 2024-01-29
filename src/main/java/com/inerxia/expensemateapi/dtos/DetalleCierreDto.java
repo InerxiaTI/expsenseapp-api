@@ -29,6 +29,5 @@ public class DetalleCierreDto {
     @NotNull
     private LocalDateTime createdDate;
 
-    @NotNull
     private LocalDateTime lastUpdate;
 }

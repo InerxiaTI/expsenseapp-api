@@ -12,6 +12,7 @@ public enum MessageResponse {
     CATEGORY_NOT_FOUND_EXCEPTION("CATEGORY_NOT_FOUND_EXCEPTION", "Category could not be found"),
     PURCHASE_NOT_FOUND_EXCEPTION("PURCHASE_NOT_FOUND_EXCEPTION", "Purchase could not be found"),
     COLLABORATOR_NOT_FOUND_EXCEPTION("COLLABORATOR_NOT_FOUND_EXCEPTION", "Collaborator could not be found"),
+    CLOSURE_DETAIL_NOT_FOUND_EXCEPTION("CLOSURE_DETAIL_NOT_FOUND_EXCEPTION", "Closure detail could not be found"),
 
 
     AMOUNT_NOT_ALLOWED("AMOUNT_NOT_ALLOWED", "Amount not allowed."),
@@ -31,6 +32,13 @@ public enum MessageResponse {
     HAS_PENDING_REQUESTS("HAS_PENDING_REQUESTS", "It is not allowed to start the list with pending requests."),
     TOTAL_PERCENTAGES_MUST_BE_100_PERCENT("TOTAL_PERCENTAGES_MUST_BE_100_PERCENT", "Total percentages must be 100 percent."),
     CATEGORY_HAS_ASSOCIATED_PURCHASES("CATEGORY_HAS_ASSOCIATED_PURCHASES", "Category has associated purchases."),
+    PURCHASE_LIST_CLOSED("PURCHASE_LIST_CLOSED", "The purchase list is already closed."),
+    PURCHASE_LIST_FINALIZED("PURCHASE_LIST_FINALIZED", "The purchase list is already finalized."),
+    PURCHASE_LIST_PENDING("PURCHASE_LIST_PENDING", "The purchase list is already pending."),
+    PURCHASE_LIST_NOT_CLOSED("PURCHASE_LIST_NOT_CLOSED", "The purchase list must be in EN_CIERRE status"),
+    PURCHASE_LIST_NOT_CONFIGURING("PURCHASE_LIST_NOT_CONFIGURING", "The shopping list must be in CONFIGURANDO state to be able to initialize it"),
+    PURCHASE_LIST_NOT_PENDING("PURCHASE_LIST_NOT_PENDING", "The purchase list must be in PENDIENTE state to be able to close it"),
+    DEBTS_NOT_CLOSED("DEBTS_NOT_CLOSED", "All debts must be closed"),
 
 
     /*Success*/
