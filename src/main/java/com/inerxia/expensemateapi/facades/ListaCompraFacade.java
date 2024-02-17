@@ -1,10 +1,7 @@
 package com.inerxia.expensemateapi.facades;
 
 import com.inerxia.expensemateapi.dtos.ListaCompraDto;
-import com.inerxia.expensemateapi.dtos.requests.CrearListaCompraRequest;
-import com.inerxia.expensemateapi.dtos.requests.DeudaBidireccional;
-import com.inerxia.expensemateapi.dtos.requests.FilterConsultaIntegrantesRequest;
-import com.inerxia.expensemateapi.dtos.requests.FilterListasComprasRequest;
+import com.inerxia.expensemateapi.dtos.requests.*;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaDetalleCierreResponse;
 import com.inerxia.expensemateapi.entities.Compra;
 import com.inerxia.expensemateapi.entities.DetalleCierre;
@@ -49,7 +46,59 @@ public class ListaCompraFacade {
         this.detalleCierreService = detalleCierreService;
     }
 
-    public Page<ListaCompraDto> consultarListaComprasConFiltroConPaginacion(FilterListasComprasRequest filtro, Pageable pageable){
+    private static Set<DeudaBidireccional> realizarCalculoBidireccional(Map<Integer, Double> totalValoresPorUsuariosCompra, List<IntegranteListaCompra> integrantes) {
+        Set<DeudaBidireccional> deudoresPorAcreedor = calcularPorcentajeDeudoresPorAcreedor(totalValoresPorUsuariosCompra, integrantes);
+        Set<DeudaBidireccional> deudasFinales = calcularRestaBidireccional(deudoresPorAcreedor);
+        return deudasFinales;
+    }
+
+    private static Set<DeudaBidireccional> calcularRestaBidireccional(Set<DeudaBidireccional> deudoresPorAcreedor) {
+        Map<Integer, List<DeudaBidireccional>> deudoresPorAcreedorGroup = deudoresPorAcreedor.stream()
+                .collect(Collectors.groupingBy(DeudaBidireccional::getIdUsuarioAcreedor));
+
+        Set<DeudaBidireccional> deudasFinales = new HashSet<>();
+        deudoresPorAcreedorGroup.forEach((acreedor, deudores) -> {
+            for (DeudaBidireccional deudor : deudores) {
+                DeudaBidireccional deudaBidireccional = deudoresPorAcreedorGroup
+                        .get(deudor.getIdUsuarioDeudor()).stream()
+                        .filter(i -> i.getIdUsuarioDeudor().equals(acreedor)).findFirst().orElse(null);
+
+                if (deudaBidireccional != null) {
+                    double resta = deudor.getValorDeuda() - deudaBidireccional.getValorDeuda();
+                    var deudaFinal = new DeudaBidireccional();
+                    if (resta < 0) {
+                        deudaFinal.setIdUsuarioAcreedor(deudor.getIdUsuarioDeudor());
+                        deudaFinal.setIdUsuarioDeudor(deudor.getIdUsuarioAcreedor());
+                    } else {
+                        deudaFinal.setIdUsuarioAcreedor(deudor.getIdUsuarioAcreedor());
+                        deudaFinal.setIdUsuarioDeudor(deudor.getIdUsuarioDeudor());
+                    }
+                    deudaFinal.setValorDeuda(Math.abs(resta));
+                    deudasFinales.add(deudaFinal);
+                }
+            }
+        });
+        return deudasFinales;
+    }
+
+    private static Set<DeudaBidireccional> calcularPorcentajeDeudoresPorAcreedor(Map<Integer, Double> totalValoresPorUsuariosCompra, List<IntegranteListaCompra> integrantes) {
+        Set<DeudaBidireccional> deudas = new HashSet<>();
+        totalValoresPorUsuariosCompra.forEach((idUsuario, totalCompras) -> {
+            for (IntegranteListaCompra integrante : integrantes) {
+                var deuda = new DeudaBidireccional();
+                if (integrante.getUsuarioId().equals(idUsuario)) {
+                    continue;
+                }
+                deuda.setIdUsuarioAcreedor(idUsuario);
+                deuda.setIdUsuarioDeudor(integrante.getUsuarioId());
+                deuda.setValorDeuda(totalCompras * (integrante.getPorcentaje() / 100));
+                deudas.add(deuda);
+            }
+        });
+        return deudas;
+    }
+
+    public Page<ListaCompraDto> consultarListaComprasConFiltroConPaginacion(FilterListasComprasRequest filtro, Pageable pageable) {
         CustomUtilService.ValidateRequired(filtro);
         CustomUtilService.ValidateRequired(filtro.getUsuario());
 
@@ -93,18 +142,18 @@ public class ListaCompraFacade {
 
         ListaCompra listaCompra = listaCompraService.findById(idListaCompras);
 
-        if(listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())){
+        if (listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())) {
             throw new BusinessException(MessageResponse.PURCHASE_LIST_PENDING);
         }
 
-        if(Objects.nonNull(back) && back){
-            if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())){
+        if (Objects.nonNull(back) && back) {
+            if (!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())) {
                 throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_CLOSED);
             }
             detalleCierreService.deleteByListaCompraId(listaCompra.getId());
             listaCompra.setFechaCierre(null);
-        }else{
-            if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.CONFIGURANDO.name())){
+        } else {
+            if (!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.CONFIGURANDO.name())) {
                 throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_CONFIGURING);
             }
 
@@ -135,10 +184,10 @@ public class ListaCompraFacade {
         return listaCompraService.update(listaCompra);
     }
 
-    private List<IntegranteListaCompra> getIntegrantesPorEstado(Integer idListaCompras, List<ESTADOS_COLABORADORES> estados){
+    private List<IntegranteListaCompra> getIntegrantesPorEstado(Integer idListaCompras, List<ESTADOS_COLABORADORES> estados) {
         var filter = new FilterConsultaIntegrantesRequest();
         filter.setIdListaCompras(idListaCompras);
-        if(!estados.isEmpty()){
+        if (!estados.isEmpty()) {
             filter.setEstados(estados.stream()
                     .map(Enum::name)
                     .collect(Collectors.toList()));
@@ -146,16 +195,16 @@ public class ListaCompraFacade {
         return integranteListaCompraService.consultarIntegrantesFilter(filter);
     }
 
-    public ListaCompraDto cerrarListaCompras(Integer idListaCompras){
+    public ListaCompraDto cerrarListaCompras(Integer idListaCompras) {
         CustomUtilService.ValidateRequired(idListaCompras);
 
         ListaCompra listaCompra = listaCompraService.findById(idListaCompras);
 
-        if(listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())){
+        if (listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())) {
             throw new BusinessException(MessageResponse.PURCHASE_LIST_CLOSED);
         }
 
-        if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())){
+        if (!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())) {
             throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_PENDING);
         }
 
@@ -178,7 +227,7 @@ public class ListaCompraFacade {
     }
 
     private void generarDetalleCierre(Set<DeudaBidireccional> deudasFinales, ListaCompra listaCompraUpdated) {
-        if(deudasFinales.size() >0){
+        if (deudasFinales.size() > 0) {
             deudasFinales.forEach(deudaBidireccional -> {
                 DetalleCierre detalleCierre = new DetalleCierre();
                 detalleCierre.setListaCompraId(listaCompraUpdated.getId());
@@ -191,81 +240,29 @@ public class ListaCompraFacade {
         }
     }
 
-    private static Set<DeudaBidireccional> realizarCalculoBidireccional(Map<Integer, Double> totalValoresPorUsuariosCompra, List<IntegranteListaCompra> integrantes) {
-        Set<DeudaBidireccional> deudoresPorAcreedor = calcularPorcentajeDeudoresPorAcreedor(totalValoresPorUsuariosCompra, integrantes);
-        Set<DeudaBidireccional> deudasFinales = calcularRestaBidireccional(deudoresPorAcreedor);
-        return deudasFinales;
-    }
-
     private ListaCompra cerrarListaCompra(ListaCompra listaCompra) {
         listaCompra.setEstado(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name());
         listaCompra.setFechaCierre(LocalDateTime.now());
         return listaCompraService.update(listaCompra);
     }
 
-    private static Set<DeudaBidireccional> calcularRestaBidireccional(Set<DeudaBidireccional> deudoresPorAcreedor) {
-        Map<Integer, List<DeudaBidireccional>> deudoresPorAcreedorGroup = deudoresPorAcreedor.stream()
-                .collect(Collectors.groupingBy(DeudaBidireccional::getIdUsuarioAcreedor));
-
-        Set<DeudaBidireccional> deudasFinales = new HashSet<>();
-        deudoresPorAcreedorGroup.forEach((acreedor, deudores) -> {
-            for (DeudaBidireccional deudor : deudores) {
-                DeudaBidireccional deudaBidireccional = deudoresPorAcreedorGroup
-                        .get(deudor.getIdUsuarioDeudor()).stream()
-                        .filter(i -> i.getIdUsuarioDeudor().equals(acreedor)).findFirst().orElse(null);
-
-                if(deudaBidireccional != null){
-                    double resta = deudor.getValorDeuda() - deudaBidireccional.getValorDeuda();
-                    var deudaFinal = new DeudaBidireccional();
-                    if(resta < 0){
-                        deudaFinal.setIdUsuarioAcreedor(deudor.getIdUsuarioDeudor());
-                        deudaFinal.setIdUsuarioDeudor(deudor.getIdUsuarioAcreedor());
-                    }else{
-                        deudaFinal.setIdUsuarioAcreedor(deudor.getIdUsuarioAcreedor());
-                        deudaFinal.setIdUsuarioDeudor(deudor.getIdUsuarioDeudor());
-                    }
-                    deudaFinal.setValorDeuda(Math.abs(resta));
-                    deudasFinales.add(deudaFinal);
-                }
-            }
-        });
-        return deudasFinales;
-    }
-
-    private static Set<DeudaBidireccional> calcularPorcentajeDeudoresPorAcreedor(Map<Integer, Double> totalValoresPorUsuariosCompra, List<IntegranteListaCompra> integrantes) {
-        Set<DeudaBidireccional> deudas = new HashSet<>();
-        totalValoresPorUsuariosCompra.forEach((idUsuario, totalCompras) -> {
-            for (IntegranteListaCompra integrante : integrantes) {
-                var deuda = new DeudaBidireccional();
-                if (integrante.getUsuarioId().equals(idUsuario)) {
-                    continue;
-                }
-                deuda.setIdUsuarioAcreedor(idUsuario);
-                deuda.setIdUsuarioDeudor(integrante.getUsuarioId());
-                deuda.setValorDeuda(totalCompras * (integrante.getPorcentaje()/100));
-                deudas.add(deuda);
-            }
-        });
-        return deudas;
-    }
-
-    public ListaCompraDto finalizarListaCompras(Integer idListaCompras){
+    public ListaCompraDto finalizarListaCompras(Integer idListaCompras) {
         CustomUtilService.ValidateRequired(idListaCompras);
 
         ListaCompra listaCompra = listaCompraService.findById(idListaCompras);
 
-        if(listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.FINALIZADO.name())){
+        if (listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.FINALIZADO.name())) {
             throw new BusinessException(MessageResponse.PURCHASE_LIST_FINALIZED);
         }
 
-        if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())){
+        if (!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())) {
             throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_CLOSED);
         }
 
         List<ConsultaDetalleCierreResponse> detalleCierre = detalleCierreService.consultarDetalleCierre(listaCompra.getId());
 
         boolean allApproved = detalleCierre.stream().allMatch(detalle -> Boolean.TRUE.equals(detalle.getAprobado()));
-        if(!allApproved){
+        if (!allApproved) {
             throw new BusinessException(MessageResponse.DEBTS_NOT_CLOSED);
         }
 
@@ -277,5 +274,18 @@ public class ListaCompraFacade {
         listaCompra.setEstado(ESTADOS_LISTA_COMPRAS.FINALIZADO.name());
         listaCompra.setFechaFinalizado(LocalDateTime.now());
         return listaCompraService.update(listaCompra);
+    }
+
+    public Page<ListaCompraDto> consultarListasSolicitadas(FilterSolicitudesRequest filter, Pageable pageable) {
+        CustomUtilService.ValidateRequired(filter);
+        CustomUtilService.ValidateRequired(filter.getIdUsuario());
+
+        usuarioService.validateUsuario(filter.getIdUsuario());
+
+        filter.setEstadoLista(ESTADOS_LISTA_COMPRAS.CONFIGURANDO.name());
+        filter.setEstadoIntegrante(ESTADOS_COLABORADORES.PENDIENTE.name());
+        filter.setEsCreador(false);
+
+        return listaCompraService.consultarListasSolicitadas(filter, pageable);
     }
 }

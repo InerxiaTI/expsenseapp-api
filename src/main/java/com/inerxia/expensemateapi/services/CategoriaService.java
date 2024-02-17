@@ -9,7 +9,6 @@ import com.inerxia.expensemateapi.utils.CustomUtilService;
 import com.inerxia.expensemateapi.utils.MessageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -35,7 +34,7 @@ public class CategoriaService {
                 new DataNotFoundException(MessageResponse.CATEGORY_NOT_FOUND_EXCEPTION));
     }
 
-    public Page<ConsultaCategoriaResponse> consultarCategoriasConFiltro(@Param("filtro") FiltroCategoriaRequest filtro, Pageable pageable) {
+    public Page<ConsultaCategoriaResponse> consultarCategoriasConFiltro(FiltroCategoriaRequest filtro, Pageable pageable) {
         return repository.consultarCategoriasConFiltro(filtro, pageable);
     }
 
@@ -56,7 +55,7 @@ public class CategoriaService {
         return repository.save(categoria);
     }
 
-    public void delete(Integer idCategoria){
+    public void delete(Integer idCategoria) {
         CustomUtilService.ValidateRequired(idCategoria);
         validateCategoria(idCategoria);
         repository.deleteById(idCategoria);
