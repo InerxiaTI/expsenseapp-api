@@ -1,6 +1,7 @@
 package com.inerxia.expensemateapi.services;
 
 import com.inerxia.expensemateapi.dtos.ListaCompraDto;
+import com.inerxia.expensemateapi.dtos.requests.FilterIndicadoresRequest;
 import com.inerxia.expensemateapi.dtos.requests.FilterListasComprasRequest;
 import com.inerxia.expensemateapi.dtos.requests.FilterSolicitudesRequest;
 import com.inerxia.expensemateapi.entities.ListaCompra;
@@ -69,5 +70,13 @@ public class ListaCompraService {
 
         listaCompraSaved.setCodigoGenerado(listaCompraSaved.getId().toString().concat(randomCode));
         return repository.save(listaCompraSaved);
+    }
+
+    public Integer cantidadListasPendientes(FilterIndicadoresRequest filtro) {
+        return repository.cantidadListasPendientes(filtro);
+    }
+
+    public Double consultarTotalDeuda(FilterIndicadoresRequest filtro) {
+        return repository.consultarTotalDeuda(filtro);
     }
 }

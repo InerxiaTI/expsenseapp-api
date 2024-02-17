@@ -1,6 +1,7 @@
 package com.inerxia.expensemateapi.repositories;
 
 import com.inerxia.expensemateapi.dtos.ListaCompraDto;
+import com.inerxia.expensemateapi.dtos.requests.FilterIndicadoresRequest;
 import com.inerxia.expensemateapi.dtos.requests.FilterListasComprasRequest;
 import com.inerxia.expensemateapi.dtos.requests.FilterSolicitudesRequest;
 import com.inerxia.expensemateapi.entities.ListaCompra;
@@ -21,7 +22,7 @@ public interface ListaCompraRepository extends JpaRepository<ListaCompra, Intege
             "WHERE (ilc.usuarioId = :#{#filtro.usuario}) " +
             "AND (ilc.estado = :#{#estadoColaborador}) " +
             "AND (:#{#filtro.estado} IS NULL OR lc.estado = :#{#filtro.estado}) " +
-            "AND (:#{#filtro.nombre} IS NULL OR LOWER(lc.nombre) LIKE LOWER(CONCAT('%', CAST(:#{#filtro.nombre} AS string),'%'))) " )
+            "AND (:#{#filtro.nombre} IS NULL OR LOWER(lc.nombre) LIKE LOWER(CONCAT('%', CAST(:#{#filtro.nombre} AS string),'%'))) ")
     Page<ListaCompraDto> consultarListaCompras(@Param("filtro") FilterListasComprasRequest filtro,
                                                String estadoColaborador,
                                                Pageable pageable);
@@ -36,7 +37,25 @@ public interface ListaCompraRepository extends JpaRepository<ListaCompra, Intege
             "AND (ilc.usuarioId = :#{#filtro.idUsuario}) " +
             "AND (ilc.estado = :#{#filtro.estadoIntegrante}) " +
             "AND (ilc.esCreador = :#{#filtro.esCreador}) " +
-            "AND (:#{#filtro.nombreLista} IS NULL OR LOWER(lc.nombre) LIKE LOWER(CONCAT('%', CAST(:#{#filtro.nombreLista} AS string),'%'))) " )
+            "AND (:#{#filtro.nombreLista} IS NULL OR LOWER(lc.nombre) LIKE LOWER(CONCAT('%', CAST(:#{#filtro.nombreLista} AS string),'%'))) ")
     Page<ListaCompraDto> consultarListasSolicitadas(@Param("filtro") FilterSolicitudesRequest filtro,
                                                     Pageable pageable);
+
+    @Query(value = "SELECT COUNT(*) " +
+            "FROM ListaCompra lc " +
+            "INNER JOIN IntegranteListaCompra ilc ON ilc.listaCompraId = lc.id " +
+            "WHERE (ilc.usuarioId = :#{#filtro.idUsuario}) " +
+            "AND (ilc.estado = :#{#filtro.estadoIntegrante}) " +
+            "AND (lc.estado IN (:#{#filtro.estadosLista})) ")
+    Integer cantidadListasPendientes(@Param("filtro") FilterIndicadoresRequest filtro);
+
+    @Query(value = "SELECT SUM(dc.totalDeuda) " +
+            "FROM ListaCompra lc " +
+            "INNER JOIN IntegranteListaCompra ilc ON ilc.listaCompraId = lc.id " +
+            "INNER JOIN DetalleCierre dc ON dc.listaCompraId = lc.id " +
+            "WHERE (ilc.usuarioId = :#{#filtro.idUsuario}) " +
+            "AND (ilc.estado = :#{#filtro.estadoIntegrante}) " +
+            "AND (lc.estado = :#{#filtro.estadoLista}) " +
+            "AND (dc.usuarioDeudorId = :#{#filtro.idUsuario}) ")
+    Double consultarTotalDeuda(@Param("filtro") FilterIndicadoresRequest filtro);
 }

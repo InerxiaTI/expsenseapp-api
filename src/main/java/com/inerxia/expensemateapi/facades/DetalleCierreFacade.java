@@ -33,7 +33,8 @@ public class DetalleCierreFacade {
         this.detalleCierreMapper = detalleCierreMapper;
         this.listaCompraService = listaCompraService;
     }
-    public List<ConsultaDetalleCierreResponse> consultarDetalleCierre(Integer idListaCompras){
+
+    public List<ConsultaDetalleCierreResponse> consultarDetalleCierre(Integer idListaCompras) {
         CustomUtilService.ValidateRequired(idListaCompras);
 
         ListaCompra listaCompra = listaCompraService.findById(idListaCompras);
@@ -41,7 +42,7 @@ public class DetalleCierreFacade {
         return detalleCierreService.consultarDetalleCierre(listaCompra.getId());
     }
 
-    public DetalleCierreDto cambiarEstadoAprobadoDetalleCierre(CambiarEstadoDetalleCierreRequest request){
+    public DetalleCierreDto cambiarEstadoAprobadoDetalleCierre(CambiarEstadoDetalleCierreRequest request) {
         CustomUtilService.ValidateRequired(request.getIdDetalleCierre());
         CustomUtilService.ValidateBooleanRequired(request.getAprobado());
 
@@ -49,7 +50,7 @@ public class DetalleCierreFacade {
 
         ListaCompra listaCompra = listaCompraService.findById(detalleCierre.getListaCompraId());
 
-        if(!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())){
+        if (!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.EN_CIERRE.name())) {
             throw new BusinessException(MessageResponse.PURCHASE_LIST_NOT_CLOSED);
         }
 

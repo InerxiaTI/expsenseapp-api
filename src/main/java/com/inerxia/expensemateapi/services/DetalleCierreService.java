@@ -21,17 +21,17 @@ public class DetalleCierreService {
         this.repository = repository;
     }
 
-    public DetalleCierre save(DetalleCierre detalleCierre){
+    public DetalleCierre save(DetalleCierre detalleCierre) {
         detalleCierre.setCreatedDate(LocalDateTime.now());
         detalleCierre.setLastUpdate(LocalDateTime.now());
         return repository.save(detalleCierre);
     }
 
-    public List<DetalleCierre> findAllByListaCompraId(Integer listaCompraId){
+    public List<DetalleCierre> findAllByListaCompraId(Integer listaCompraId) {
         return repository.findAllByListaCompraId(listaCompraId);
     }
 
-    public List<ConsultaDetalleCierreResponse> consultarDetalleCierre(Integer idListaCompras){
+    public List<ConsultaDetalleCierreResponse> consultarDetalleCierre(Integer idListaCompras) {
         return repository.consultarDetalleCierre(idListaCompras);
     }
 
@@ -45,7 +45,7 @@ public class DetalleCierreService {
                 new DataNotFoundException(MessageResponse.CLOSURE_DETAIL_NOT_FOUND_EXCEPTION));
     }
 
-    public DetalleCierre update(DetalleCierre detalleCierre){
+    public DetalleCierre update(DetalleCierre detalleCierre) {
         CustomUtilService.ValidateRequired(detalleCierre.getId());
         validateDetalleCierre(detalleCierre.getId());
         detalleCierre.setLastUpdate(LocalDateTime.now());

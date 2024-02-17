@@ -24,21 +24,21 @@ public class CompraService {
         this.repository = repository;
     }
 
-    public Page<ConsultaComprasResponse> consultarComprasConFiltro(FiltroComprasRequest filtro, Pageable pageable){
+    public Page<ConsultaComprasResponse> consultarComprasConFiltro(FiltroComprasRequest filtro, Pageable pageable) {
         return repository.consultarComprasConFiltro(filtro, pageable);
     }
 
-    public Compra save(Compra compra){
+    public Compra save(Compra compra) {
         compra.setCreatedDate(LocalDateTime.now());
         compra.setLastUpdate(LocalDateTime.now());
         return repository.save(compra);
     }
 
-    public List<Compra> consultarComprasByListaCompra(Integer idListaCompra){
+    public List<Compra> consultarComprasByListaCompra(Integer idListaCompra) {
         return repository.consultarComprasByListaCompra(idListaCompra);
     }
 
-    public List<Compra> consultarComprasByCategoria(Integer idCategoria){
+    public List<Compra> consultarComprasByCategoria(Integer idCategoria) {
         return repository.consultarComprasByCategoria(idCategoria);
     }
 
@@ -52,16 +52,20 @@ public class CompraService {
                 new DataNotFoundException(MessageResponse.PURCHASE_NOT_FOUND_EXCEPTION));
     }
 
-    public Compra update(Compra compra){
+    public Compra update(Compra compra) {
         CustomUtilService.ValidateRequired(compra.getId());
         validateCompra(compra.getId());
         compra.setLastUpdate(LocalDateTime.now());
         return repository.save(compra);
     }
 
-    public void delete(Integer idCompra){
+    public void delete(Integer idCompra) {
         CustomUtilService.ValidateRequired(idCompra);
         validateCompra(idCompra);
         repository.deleteById(idCompra);
+    }
+
+    public Double consultarDineroGastado(Integer usuarioId) {
+        return repository.consultarDineroGastado(usuarioId);
     }
 }

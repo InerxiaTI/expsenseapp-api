@@ -9,10 +9,7 @@ import com.inerxia.expensemateapi.entities.Compra;
 import com.inerxia.expensemateapi.entities.ListaCompra;
 import com.inerxia.expensemateapi.exceptions.RequestErrorException;
 import com.inerxia.expensemateapi.mappers.CompraMapper;
-import com.inerxia.expensemateapi.services.CategoriaService;
-import com.inerxia.expensemateapi.services.CompraService;
-import com.inerxia.expensemateapi.services.ListaCompraService;
-import com.inerxia.expensemateapi.services.UsuarioService;
+import com.inerxia.expensemateapi.services.*;
 import com.inerxia.expensemateapi.utils.CustomUtilService;
 import com.inerxia.expensemateapi.utils.MessageResponse;
 import com.inerxia.expensemateapi.utils.enums.ESTADOS_LISTA_COMPRAS;
@@ -36,16 +33,18 @@ public class CompraFacade {
     private final ListaCompraService listaCompraService;
     private final UsuarioService usuarioService;
     private final CategoriaService categoriaService;
+    private final IntegranteListaCompraService integranteListaCompraService;
 
-    public CompraFacade(CompraMapper compraMapper, CompraService compraService, ListaCompraService listaCompraService, UsuarioService usuarioService, CategoriaService categoriaService) {
+    public CompraFacade(CompraMapper compraMapper, CompraService compraService, ListaCompraService listaCompraService, UsuarioService usuarioService, CategoriaService categoriaService, IntegranteListaCompraService integranteListaCompraService) {
         this.compraMapper = compraMapper;
         this.compraService = compraService;
         this.listaCompraService = listaCompraService;
         this.usuarioService = usuarioService;
         this.categoriaService = categoriaService;
+        this.integranteListaCompraService = integranteListaCompraService;
     }
 
-    public Page<ConsultaComprasResponse> consultarComprasConFiltro(FiltroComprasRequest filtro, Pageable pageable){
+    public Page<ConsultaComprasResponse> consultarComprasConFiltro(FiltroComprasRequest filtro, Pageable pageable) {
         CustomUtilService.ValidateRequired(filtro);
         CustomUtilService.ValidateRequired(filtro.getIdListaCompras());
         CustomUtilService.ValidateRequired(filtro.getIdUsuarioCompra());
@@ -56,7 +55,7 @@ public class CompraFacade {
         return compraService.consultarComprasConFiltro(filtro, pageable);
     }
 
-    public CompraDto crearCompra(CrearCompraRequest request){
+    public CompraDto crearCompra(CrearCompraRequest request) {
         CustomUtilService.ValidateRequired(request);
         CustomUtilService.ValidateRequired(request.getIdListaCompras());
         CustomUtilService.ValidateRequired(request.getIdCategoria());
@@ -68,6 +67,9 @@ public class CompraFacade {
         usuarioService.validateUsuario(request.getIdUsuarioCompra());
         usuarioService.validateUsuario(request.getIdUsuarioRegistro());
         categoriaService.validateCategoria(request.getIdCategoria());
+        integranteListaCompraService.findByListaCompraIdAndUsuarioId(request.getIdListaCompras(), request.getIdUsuarioCompra());
+        integranteListaCompraService.findByListaCompraIdAndUsuarioId(request.getIdListaCompras(), request.getIdUsuarioRegistro());
+
 
         if (request.getValor() <= 0) {
             throw new RequestErrorException(MessageResponse.AMOUNT_NOT_ALLOWED);
@@ -75,7 +77,7 @@ public class CompraFacade {
 
         var listaCompra = listaCompraService.findById(request.getIdListaCompras());
         if (!listaCompra.getEstado().equals(ESTADOS_LISTA_COMPRAS.PENDIENTE.name())) {
-            throw new RequestErrorException(MessageResponse.ADD_PURCHASE_NOT_ALLOWED );
+            throw new RequestErrorException(MessageResponse.ADD_PURCHASE_NOT_ALLOWED);
         }
 
         Compra compraSaved = compraService.save(buildCompraToCreate(request));
@@ -85,7 +87,7 @@ public class CompraFacade {
         return compraMapper.toDto(compraSaved);
     }
 
-    public CompraDto editarCompra(EditarCompraRequest request){
+    public CompraDto editarCompra(EditarCompraRequest request) {
         CustomUtilService.ValidateRequired(request);
         CustomUtilService.ValidateRequired(request.getIdCompra());
         CustomUtilService.ValidateRequired(request.getIdUsuarioRegistro());
@@ -117,7 +119,7 @@ public class CompraFacade {
         return compraMapper.toDto(compraUpdated);
     }
 
-    public void eliminarCompra(Integer idCompra){
+    public void eliminarCompra(Integer idCompra) {
         CustomUtilService.ValidateRequired(idCompra);
 
         Compra compra = compraService.findById(idCompra);
@@ -140,7 +142,7 @@ public class CompraFacade {
         listaCompraService.update(listaCompra);
     }
 
-    public Compra buildCompraToCreate(CrearCompraRequest request){
+    public Compra buildCompraToCreate(CrearCompraRequest request) {
         Compra compra = new Compra();
         compra.setListaCompraId(request.getIdListaCompras());
         compra.setCategoriaId(request.getIdCategoria());
@@ -153,7 +155,7 @@ public class CompraFacade {
         return compra;
     }
 
-    public Compra buildCompraToUpdate(EditarCompraRequest request, Compra compra){
+    public Compra buildCompraToUpdate(EditarCompraRequest request, Compra compra) {
         compra.setCategoriaId(request.getIdCategoria());
         compra.setUsuarioCompraId(request.getIdUsuarioCompra());
         compra.setUsuarioRegistroId(request.getIdUsuarioRegistro());
@@ -163,7 +165,7 @@ public class CompraFacade {
         return compra;
     }
 
-    private Double calcularTotalCompras(List<Compra> compras){
+    private Double calcularTotalCompras(List<Compra> compras) {
         return compras.stream()
                 .mapToDouble(Compra::getValor)
                 .sum();

@@ -4,6 +4,7 @@ import com.inerxia.expensemateapi.dtos.ListaCompraDto;
 import com.inerxia.expensemateapi.dtos.requests.CrearListaCompraRequest;
 import com.inerxia.expensemateapi.dtos.requests.FilterListasComprasRequest;
 import com.inerxia.expensemateapi.dtos.requests.FilterSolicitudesRequest;
+import com.inerxia.expensemateapi.dtos.responses.IndicadoresResponse;
 import com.inerxia.expensemateapi.facades.ListaCompraFacade;
 import com.inerxia.expensemateapi.utils.MessageResponse;
 import com.inerxia.expensemateapi.utils.StandardResponse;
@@ -125,5 +126,18 @@ public class ListaCompraController {
             @RequestBody FilterSolicitudesRequest filtro, Pageable pageable) {
         var listasSolicitadas = facade.consultarListasSolicitadas(filtro, pageable);
         return ResponseEntity.ok(new StandardResponse<>(listasSolicitadas));
+    }
+
+    @GetMapping("/indicadores/{usuarioId}")
+    @Operation(summary = "Consulta los indicadores de un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data searched successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<IndicadoresResponse>> consultarIndicadores(
+            @PathVariable Integer usuarioId) {
+        var result = facade.consultarIndicadores(usuarioId);
+        return ResponseEntity.ok(new StandardResponse<>(result));
     }
 }

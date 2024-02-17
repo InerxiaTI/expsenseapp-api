@@ -3,6 +3,7 @@ package com.inerxia.expensemateapi.facades;
 import com.inerxia.expensemateapi.dtos.ListaCompraDto;
 import com.inerxia.expensemateapi.dtos.requests.*;
 import com.inerxia.expensemateapi.dtos.responses.ConsultaDetalleCierreResponse;
+import com.inerxia.expensemateapi.dtos.responses.IndicadoresResponse;
 import com.inerxia.expensemateapi.entities.Compra;
 import com.inerxia.expensemateapi.entities.DetalleCierre;
 import com.inerxia.expensemateapi.entities.IntegranteListaCompra;
@@ -287,5 +288,32 @@ public class ListaCompraFacade {
         filter.setEsCreador(false);
 
         return listaCompraService.consultarListasSolicitadas(filter, pageable);
+    }
+
+    public IndicadoresResponse consultarIndicadores(Integer idUsuario) {
+        CustomUtilService.ValidateRequired(idUsuario);
+        usuarioService.validateUsuario(idUsuario);
+
+        var estadosLista = List.of(ESTADOS_LISTA_COMPRAS.PENDIENTE.name(), ESTADOS_LISTA_COMPRAS.EN_CIERRE.name());
+        var filter = new FilterIndicadoresRequest();
+        filter.setIdUsuario(idUsuario);
+        filter.setEstadosLista(estadosLista);
+        filter.setEstadoIntegrante(ESTADOS_COLABORADORES.APROBADO.name());
+        var cantidadListasPendientes = listaCompraService.cantidadListasPendientes(filter);
+
+        var dineroGastado = compraService.consultarDineroGastado(idUsuario);
+
+        var estadoLista = ESTADOS_LISTA_COMPRAS.EN_CIERRE.name();
+        filter = new FilterIndicadoresRequest();
+        filter.setIdUsuario(idUsuario);
+        filter.setEstadoLista(estadoLista);
+        filter.setEstadoIntegrante(ESTADOS_COLABORADORES.APROBADO.name());
+        var totalDeuda = listaCompraService.consultarTotalDeuda(filter);
+
+        var indicadores = new IndicadoresResponse();
+        indicadores.setCantidadListasPendientes(cantidadListasPendientes);
+        indicadores.setTotalDineroGastado(dineroGastado);
+        indicadores.setTotalDeuda(totalDeuda);
+        return indicadores;
     }
 }

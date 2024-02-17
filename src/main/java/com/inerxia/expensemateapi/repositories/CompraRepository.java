@@ -38,4 +38,9 @@ public interface CompraRepository extends JpaRepository<Compra, Integer> {
             "FROM Compra c " +
             "WHERE (c.categoriaId = :#{#idCategoria}) ")
     List<Compra> consultarComprasByCategoria(Integer idCategoria);
+
+    @Query(value = "SELECT SUM(c.valor) " +
+            "FROM Compra c " +
+            "WHERE (c.usuarioCompraId = :#{#usuarioId}) ")
+    Double consultarDineroGastado(Integer usuarioId);
 }
