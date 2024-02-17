@@ -27,7 +27,7 @@ public class UsuarioFacade {
         this.usuarioService = usuarioService;
     }
 
-    public UsuarioDto getUsuarioByCorreoWithPass(GetUsuarioRequest request){
+    public UsuarioDto getUsuarioByCorreoWithPass(GetUsuarioRequest request) {
         CustomUtilService.ValidateRequired(request);
         CustomUtilService.ValidateRequired(request.getEmail());
         CustomUtilService.ValidateRequired(request.getPass());

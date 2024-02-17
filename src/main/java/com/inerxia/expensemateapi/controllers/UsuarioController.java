@@ -25,6 +25,7 @@ public class UsuarioController {
     public UsuarioController(UsuarioFacade facade) {
         this.facade = facade;
     }
+
     @PostMapping("/login")
     @Operation(summary = "Consultar usuario")
     @ApiResponses(value = {

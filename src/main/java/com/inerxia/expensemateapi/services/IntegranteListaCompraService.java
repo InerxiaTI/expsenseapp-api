@@ -26,13 +26,13 @@ public class IntegranteListaCompraService {
         this.repository = repository;
     }
 
-    public IntegranteListaCompra save(IntegranteListaCompra integranteListaCompra){
+    public IntegranteListaCompra save(IntegranteListaCompra integranteListaCompra) {
         integranteListaCompra.setCreatedDate(LocalDateTime.now());
         integranteListaCompra.setLastUpdate(LocalDateTime.now());
         return repository.save(integranteListaCompra);
     }
 
-    public IntegranteListaCompra update(IntegranteListaCompra integranteListaCompra){
+    public IntegranteListaCompra update(IntegranteListaCompra integranteListaCompra) {
         CustomUtilService.ValidateRequired(integranteListaCompra.getId());
         validateIntegranteListaCompra(integranteListaCompra.getId());
         integranteListaCompra.setLastUpdate(LocalDateTime.now());
@@ -44,7 +44,7 @@ public class IntegranteListaCompraService {
                 new DataNotFoundException(MessageResponse.COLLABORATOR_NOT_FOUND_EXCEPTION));
     }
 
-    public IntegranteListaCompra agregarColaborador(IntegranteListaCompra integranteListaCompra){
+    public IntegranteListaCompra agregarColaborador(IntegranteListaCompra integranteListaCompra) {
         List<IntegranteListaCompra> integrantes = findAllByListaCompraId(integranteListaCompra.getListaCompraId());
 
         Optional<IntegranteListaCompra> integranteFound = integrantes.stream()
@@ -60,27 +60,27 @@ public class IntegranteListaCompraService {
         return save(integranteListaCompra);
     }
 
-    public List<IntegranteListaCompra> findAllByListaCompraId(Integer listaCompraId){
+    public List<IntegranteListaCompra> findAllByListaCompraId(Integer listaCompraId) {
         return repository.findAllByListaCompraId(listaCompraId);
     }
 
-    public IntegranteListaCompra findByListaCompraIdAndUsuarioId(Integer listaCompraId, Integer usuarioId){
+    public IntegranteListaCompra findByListaCompraIdAndUsuarioId(Integer listaCompraId, Integer usuarioId) {
         return repository.findByListaCompraIdAndUsuarioId(listaCompraId, usuarioId).orElseThrow(() ->
                 new DataNotFoundException(MessageResponse.COLLABORATOR_NOT_FOUND_EXCEPTION));
     }
 
-    public List<ConsultaIntegrantesResponse> consultarIntegrantesWithTotalCompras(FilterConsultaIntegrantesRequest filtro){
+    public List<ConsultaIntegrantesResponse> consultarIntegrantesWithTotalCompras(FilterConsultaIntegrantesRequest filtro) {
         return repository.consultarIntegrantesWithTotalCompras(filtro);
     }
 
-    public List<IntegranteListaCompra> consultarIntegrantesFilter(FilterConsultaIntegrantesRequest filtro){
+    public List<IntegranteListaCompra> consultarIntegrantesFilter(FilterConsultaIntegrantesRequest filtro) {
         return repository.consultarIntegrantesFilter(filtro);
     }
 
-    public Double sumarPorcentajesIntegrantes(List<IntegranteListaCompra> integrantes){
+    public Double sumarPorcentajesIntegrantes(List<IntegranteListaCompra> integrantes) {
         return integrantes.stream()
                 .mapToDouble(integrante -> Optional.ofNullable(integrante.getPorcentaje())
-                .orElse(0.0))
+                        .orElse(0.0))
                 .sum();
     }
 }

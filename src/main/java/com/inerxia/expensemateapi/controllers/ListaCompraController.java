@@ -3,6 +3,8 @@ package com.inerxia.expensemateapi.controllers;
 import com.inerxia.expensemateapi.dtos.ListaCompraDto;
 import com.inerxia.expensemateapi.dtos.requests.CrearListaCompraRequest;
 import com.inerxia.expensemateapi.dtos.requests.FilterListasComprasRequest;
+import com.inerxia.expensemateapi.dtos.requests.FilterSolicitudesRequest;
+import com.inerxia.expensemateapi.dtos.responses.IndicadoresResponse;
 import com.inerxia.expensemateapi.facades.ListaCompraFacade;
 import com.inerxia.expensemateapi.utils.MessageResponse;
 import com.inerxia.expensemateapi.utils.StandardResponse;
@@ -75,7 +77,7 @@ public class ListaCompraController {
             @ApiResponse(responseCode = "500", description = "Internal error processing response"),
     })
     public ResponseEntity<StandardResponse<ListaCompraDto>> inicializarListaCompras(@PathVariable Integer idListaCompras,
-                                                                                    @RequestParam(name="back", required = false) Boolean back) {
+                                                                                    @RequestParam(name = "back", required = false) Boolean back) {
         var result = facade.inicializarListaCompras(idListaCompras, back);
         return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.PURCHASE_LIST_UPDATED.getMessage(), MessageResponse.PURCHASE_LIST_UPDATED.getDescription()));
     }
@@ -102,5 +104,40 @@ public class ListaCompraController {
     public ResponseEntity<StandardResponse<ListaCompraDto>> finalizarListaCompras(@PathVariable Integer idListaCompras) {
         var result = facade.finalizarListaCompras(idListaCompras);
         return ResponseEntity.ok(new StandardResponse<>(result, MessageResponse.PURCHASE_LIST_UPDATED.getMessage(), MessageResponse.PURCHASE_LIST_UPDATED.getDescription()));
+    }
+
+    @PostMapping("/filter/solicitadas")
+    @Operation(summary = "Consulta las listas de compras solcitadas con filtros y paginación")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data found successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    @Parameters({
+            @Parameter(in = ParameterIn.QUERY, description = "Page you want to retrieve (0..N)", name = "page",
+                    content = @Content(schema = @Schema(type = "integer", defaultValue = "0"))),
+            @Parameter(in = ParameterIn.QUERY, description = "Number of records per page.", name = "size",
+                    content = @Content(schema = @Schema(type = "integer", defaultValue = "20"))),
+            @Parameter(in = ParameterIn.QUERY, description = "Sorting criteria in the format: property(,asc|desc). "
+                    + "Default sort order is ascending. " + "Multiple sort criteria are supported.", name = "sort",
+                    content = @Content(array = @ArraySchema(schema = @Schema(type = "string"))))
+    })
+    public ResponseEntity<StandardResponse<Page<ListaCompraDto>>> consultarListasSolicitadas(
+            @RequestBody FilterSolicitudesRequest filtro, Pageable pageable) {
+        var listasSolicitadas = facade.consultarListasSolicitadas(filtro, pageable);
+        return ResponseEntity.ok(new StandardResponse<>(listasSolicitadas));
+    }
+
+    @GetMapping("/indicadores/{usuarioId}")
+    @Operation(summary = "Consulta los indicadores de un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Data searched successfully"),
+            @ApiResponse(responseCode = "400", description = "The request is invalid"),
+            @ApiResponse(responseCode = "500", description = "Internal error processing response"),
+    })
+    public ResponseEntity<StandardResponse<IndicadoresResponse>> consultarIndicadores(
+            @PathVariable Integer usuarioId) {
+        var result = facade.consultarIndicadores(usuarioId);
+        return ResponseEntity.ok(new StandardResponse<>(result));
     }
 }

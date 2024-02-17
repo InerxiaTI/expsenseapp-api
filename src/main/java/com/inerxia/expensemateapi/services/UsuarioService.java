@@ -19,7 +19,7 @@ public class UsuarioService {
         this.repository = repository;
     }
 
-    public boolean usuarioExists(Integer idUsuario){
+    public boolean usuarioExists(Integer idUsuario) {
         CustomUtilService.ValidateRequired(idUsuario);
         var usuario = repository.findById(idUsuario);
         return usuario.isPresent();
@@ -33,7 +33,7 @@ public class UsuarioService {
     public void validateUsuarioActivo(Integer idUsuario) {
         var usuario = repository.findById(idUsuario).orElseThrow(() ->
                 new DataNotFoundException(MessageResponse.USER_NOT_FOUND_EXCEPTION));
-        if(!usuario.getActivo()){
+        if (!usuario.getActivo()) {
             throw new BusinessException(MessageResponse.USER_NOT_ACTIVE);
         }
     }

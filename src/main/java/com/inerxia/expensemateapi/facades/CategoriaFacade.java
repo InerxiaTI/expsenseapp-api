@@ -41,7 +41,7 @@ public class CategoriaFacade {
         this.compraService = compraService;
     }
 
-    public Page<ConsultaCategoriaResponse> consultarCategoriasConFiltro(@Param("filtro") FiltroCategoriaRequest filtro, Pageable pageable){
+    public Page<ConsultaCategoriaResponse> consultarCategoriasConFiltro(@Param("filtro") FiltroCategoriaRequest filtro, Pageable pageable) {
         CustomUtilService.ValidateRequired(filtro);
         CustomUtilService.ValidateRequired(filtro.getIdUsuarioCreador());
 
@@ -50,7 +50,7 @@ public class CategoriaFacade {
         return categoriaService.consultarCategoriasConFiltro(filtro, pageable);
     }
 
-    public List<CategoriaDto> consultarCategoriasDelCreadorConFiltro(Integer usuarioCreadorId){
+    public List<CategoriaDto> consultarCategoriasDelCreadorConFiltro(Integer usuarioCreadorId) {
         CustomUtilService.ValidateRequired(usuarioCreadorId);
 
         usuarioService.validateUsuario(usuarioCreadorId);
@@ -58,7 +58,7 @@ public class CategoriaFacade {
         return categoriaMapper.toDto(categoriaService.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId));
     }
 
-    public CategoriaDto crearCategoria(CrearCategoriaRequest request){
+    public CategoriaDto crearCategoria(CrearCategoriaRequest request) {
         CustomUtilService.ValidateRequired(request);
         CustomUtilService.ValidateRequired(request.getIdUsuarioCreador());
         CustomUtilService.ValidateRequired(request.getEsPrivada());
@@ -74,7 +74,7 @@ public class CategoriaFacade {
         return categoriaMapper.toDto(categoriaSaved);
     }
 
-    public CategoriaDto editarCategoria(EditarCategoriaRequest request){
+    public CategoriaDto editarCategoria(EditarCategoriaRequest request) {
         CustomUtilService.ValidateRequired(request);
         CustomUtilService.ValidateRequired(request.getIdCategoria());
 
@@ -91,13 +91,13 @@ public class CategoriaFacade {
         return categoriaMapper.toDto(categoriaSaved);
     }
 
-    public void eliminarCategoria(Integer idCategoria){
+    public void eliminarCategoria(Integer idCategoria) {
         CustomUtilService.ValidateRequired(idCategoria);
 
         Categoria categoria = categoriaService.findById(idCategoria);
 
         List<Compra> compras = compraService.consultarComprasByCategoria(categoria.getId());
-        if(!compras.isEmpty()){
+        if (!compras.isEmpty()) {
             throw new RequestErrorException(MessageResponse.CATEGORY_HAS_ASSOCIATED_PURCHASES);
         }
         categoriaService.delete(categoria.getId());
