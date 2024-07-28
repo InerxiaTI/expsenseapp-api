@@ -26,7 +26,7 @@ public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
     @Query(value = "SELECT c " +
             "FROM Categoria c " +
             "WHERE (c.usuarioCreadorId = :usuarioCreadorId) " +
-            "AND (c.esPrivada = false) " +
+            "AND (:esPrivada IS NULL OR c.esPrivada = :esPrivada) " +
             "ORDER BY c.nombre ASC ")
-    List<Categoria> consultarCategoriasDelCreadorConFiltro(@Param("usuarioCreadorId") Integer usuarioCreadorId);
+    List<Categoria> consultarCategoriasDelCreadorConFiltro(@Param("usuarioCreadorId") Integer usuarioCreadorId, @Param("esPrivada") Boolean esPrivada);
 }

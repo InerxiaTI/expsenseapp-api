@@ -38,8 +38,8 @@ public class CategoriaService {
         return repository.consultarCategoriasConFiltro(filtro, pageable);
     }
 
-    public List<Categoria> consultarCategoriasDelCreadorConFiltro(Integer usuarioCreadorId) {
-        return repository.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId);
+    public List<Categoria> consultarCategoriasDelCreadorConFiltro(Integer usuarioCreadorId, Boolean esPrivada) {
+        return repository.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId, esPrivada);
     }
 
     public Categoria save(Categoria categoria) {

@@ -50,12 +50,12 @@ public class CategoriaFacade {
         return categoriaService.consultarCategoriasConFiltro(filtro, pageable);
     }
 
-    public List<CategoriaDto> consultarCategoriasDelCreadorConFiltro(Integer usuarioCreadorId) {
+    public List<CategoriaDto> consultarCategoriasDelCreadorConFiltro(Integer usuarioCreadorId, Boolean esPrivada) {
         CustomUtilService.ValidateRequired(usuarioCreadorId);
 
         usuarioService.validateUsuario(usuarioCreadorId);
 
-        return categoriaMapper.toDto(categoriaService.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId));
+        return categoriaMapper.toDto(categoriaService.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId, esPrivada));
     }
 
     public CategoriaDto crearCategoria(CrearCategoriaRequest request) {

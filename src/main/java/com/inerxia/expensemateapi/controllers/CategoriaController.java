@@ -67,8 +67,8 @@ public class CategoriaController {
             @ApiResponse(responseCode = "500", description = "Internal error processing response"),
     })
     public ResponseEntity<StandardResponse<List<CategoriaDto>>> consultarCategoriasDelCreadorConFiltro(
-            @PathVariable Integer usuarioCreadorId) {
-        var result = facade.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId);
+            @PathVariable Integer usuarioCreadorId, @RequestParam(name = "esPrivada", required = false) Boolean esPrivada) {
+        var result = facade.consultarCategoriasDelCreadorConFiltro(usuarioCreadorId, esPrivada);
         return ResponseEntity.ok(new StandardResponse<>(result));
     }
 
