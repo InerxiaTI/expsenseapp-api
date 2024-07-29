@@ -71,7 +71,7 @@ public class CompraFacade {
         integranteListaCompraService.findByListaCompraIdAndUsuarioId(request.getIdListaCompras(), request.getIdUsuarioRegistro());
 
 
-        if (request.getValor() <= 0) {
+        if (request.getValor() < 0) {
             throw new RequestErrorException(MessageResponse.AMOUNT_NOT_ALLOWED);
         }
 
