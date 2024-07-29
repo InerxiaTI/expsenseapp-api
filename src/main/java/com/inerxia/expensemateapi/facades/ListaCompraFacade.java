@@ -211,6 +211,12 @@ public class ListaCompraFacade {
 
         List<Compra> compras = compraService.consultarComprasByListaCompra(listaCompra.getId());
 
+        boolean comprasEnCero = compras.stream().anyMatch(compra -> compra.getValor().equals(0.0));
+
+        if (comprasEnCero) {
+            throw new BusinessException(MessageResponse.PURCHASE_SOME_ZERO);
+        }
+
         Map<Integer, Double> totalValoresPorUsuariosCompra = compras.stream()
                 .collect(Collectors.groupingBy(Compra::getUsuarioCompraId,
                         Collectors.summingDouble(Compra::getValor)));
