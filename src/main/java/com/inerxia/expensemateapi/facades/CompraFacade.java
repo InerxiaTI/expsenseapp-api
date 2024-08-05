@@ -103,7 +103,7 @@ public class CompraFacade {
             categoriaService.validateCategoria(request.getIdCategoria());
         }
 
-        if (request.getValor() <= 0) {
+        if (request.getValor() < 0) {
             throw new RequestErrorException(MessageResponse.AMOUNT_NOT_ALLOWED);
         }
 
