@@ -1,14 +1,14 @@
 # Server properties
 server:
   servlet:
-    context-path: /expensemate-api
+    context-path: /expense-app-api
 # Spring properties
 spring:
   # Dev is active by default. This value can be overwritten by java arg param 
   profiles:
     active: dev
   application:
-    name: expensemate-api
+    name: expense-app-api
   messages:
     basename: bundles/apiLanguageBundle
   jackson:
